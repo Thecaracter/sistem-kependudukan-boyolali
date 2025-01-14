@@ -509,6 +509,9 @@
             const audio = new Audio('/assets/sounds/beep.mp3');
             audio.play().catch(() => {}); // Ignore error if sound can't play
 
+            // Show scanned result first
+            alert('Hasil Scan: ' + qrCode);
+
             updateStatus('success', 'QR Code terdeteksi! Memproses...');
             stopScanning();
 
@@ -524,21 +527,33 @@
                         qr_code: qrCode
                     })
                 })
-                .then(response => response.json())
+                .then(response => {
+                    // Log raw response for debugging
+                    console.log('Raw Response:', response);
+                    return response.json();
+                })
                 .then(data => {
                     removeLoadingAnimation();
+                    // Log processed data
+                    console.log('Processed Data:', data);
+
                     if (data.success && data.redirect_url) {
                         updateStatus('success', 'QR Code valid! Mengalihkan...');
                         window.location.href = data.redirect_url;
                     } else {
-                        updateStatus('error', data.message || 'QR Code tidak valid');
+                        let errorMsg = data.message || 'QR Code tidak valid';
+                        // Show error details
+                        alert('Error: ' + errorMsg);
+                        updateStatus('error', errorMsg);
                         setTimeout(() => startScanning(currentDeviceId), 2000);
                     }
                 })
                 .catch(error => {
                     removeLoadingAnimation();
                     console.error('Error:', error);
-                    updateStatus('error', 'Terjadi kesalahan saat memproses QR Code');
+                    let errorMsg = 'Terjadi kesalahan saat memproses QR Code: ' + error.message;
+                    alert(errorMsg);
+                    updateStatus('error', errorMsg);
                     setTimeout(() => startScanning(currentDeviceId), 2000);
                 });
         }
@@ -657,7 +672,7 @@
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
                 handleCameraError(new Error(
                     'Browser Anda tidak mendukung akses kamera. Mohon gunakan browser modern seperti Chrome atau Firefox terbaru.'
-                    ));
+                ));
                 return;
             }
 
