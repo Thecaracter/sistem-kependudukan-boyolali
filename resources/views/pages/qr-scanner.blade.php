@@ -175,7 +175,6 @@
             }
         }
 
-        /* Additional style for camera permission error */
         .camera-error {
             position: absolute;
             inset: 0;
@@ -205,6 +204,16 @@
         .camera-error p {
             font-size: 0.875rem;
             color: #d1d5db;
+        }
+
+        /* Modal styles */
+        .modal {
+            transition: opacity 0.25s ease;
+        }
+
+        .modal-active {
+            overflow-x: hidden;
+            overflow-y: visible !important;
         }
     </style>
 @endpush
@@ -331,7 +340,119 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Result -->
+    <div id="scan-result-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+        <div class="min-h-screen px-4 text-center">
+            <!-- Background overlay -->
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+
+            <!-- Modal panel -->
+            <div
+                class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="w-full">
+                            <!-- Header -->
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                                    Data Hasil Scan QR Code
+                                </h3>
+                                <button type="button" onclick="closeModal()" class="text-gray-400 hover:text-gray-500">
+                                    <span class="sr-only">Close</span>
+                                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <!-- Content -->
+                            <div class="max-h-[70vh] overflow-y-auto pr-2">
+                                <!-- Identitas Rumah Section -->
+                                <div class="bg-white rounded-lg shadow-sm mb-4 border">
+                                    <div class="px-4 py-3 border-b">
+                                        <h4 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                            </svg>
+                                            Identitas Rumah
+                                        </h4>
+                                    </div>
+                                    <div class="p-4" id="identitas-rumah-content">
+                                        <!-- Content will be inserted here -->
+                                    </div>
+                                </div>
+
+                                <!-- Kartu Keluarga Section -->
+                                <div class="bg-white rounded-lg shadow-sm mb-4 border">
+                                    <div class="px-4 py-3 border-b">
+                                        <h4 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                            </svg>
+                                            Data Kartu Keluarga
+                                        </h4>
+                                    </div>
+                                    <div class="p-4" id="kartu-keluarga-content">
+                                        <!-- Content will be inserted here -->
+                                    </div>
+                                </div>
+
+                                <!-- Anggota Keluarga Section -->
+                                <div class="bg-white rounded-lg shadow-sm mb-4 border">
+                                    <div class="px-4 py-3 border-b">
+                                        <h4 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                            </svg>
+                                            Anggota Keluarga
+                                        </h4>
+                                    </div>
+                                    <div class="p-4" id="anggota-keluarga-content">
+                                        <!-- Content will be inserted here -->
+                                    </div>
+                                </div>
+
+                                <!-- Verifikasi Section -->
+                                <div class="bg-white rounded-lg shadow-sm border">
+                                    <div class="px-4 py-3 border-b">
+                                        <h4 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            Status Verifikasi
+                                        </h4>
+                                    </div>
+                                    <div class="p-4" id="verifikasi-content">
+                                        <!-- Content will be inserted here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" onclick="closeModal()"
+                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-emerald-600 text-base font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 sm:ml-3 sm:w-auto sm:text-sm">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
+
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
     <script>
@@ -341,8 +462,22 @@
         const statusIndicator = document.getElementById('status-indicator');
         const scannerStatus = document.getElementById('scanner-status');
         const cameraError = document.getElementById('camera-error');
+        const modal = document.getElementById('scan-result-modal');
         let stream;
         let currentDeviceId = null;
+
+        // Modal functions
+        function showModal() {
+            modal.classList.remove('hidden');
+            document.body.classList.add('modal-active');
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            document.body.classList.remove('modal-active');
+            // Restart scanning after modal is closed
+            startScanning(currentDeviceId);
+        }
 
         startButton.addEventListener('click', () => startScanning(currentDeviceId));
         stopButton.addEventListener('click', stopScanning);
@@ -509,9 +644,6 @@
             const audio = new Audio('/assets/sounds/beep.mp3');
             audio.play().catch(() => {}); // Ignore error if sound can't play
 
-            // Show scanned result first
-            alert('Hasil Scan: ' + qrCode);
-
             updateStatus('success', 'QR Code terdeteksi! Memproses...');
             stopScanning();
 
@@ -527,22 +659,15 @@
                         qr_code: qrCode
                     })
                 })
-                .then(response => {
-                    // Log raw response for debugging
-                    console.log('Raw Response:', response);
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
                     removeLoadingAnimation();
-                    // Log processed data
-                    console.log('Processed Data:', data);
 
-                    if (data.success && data.redirect_url) {
-                        updateStatus('success', 'QR Code valid! Mengalihkan...');
-                        window.location.href = data.redirect_url;
+                    if (data.success) {
+                        displayScanResult(data.data);
+                        showModal();
                     } else {
                         let errorMsg = data.message || 'QR Code tidak valid';
-                        // Show error details
                         alert('Error: ' + errorMsg);
                         updateStatus('error', errorMsg);
                         setTimeout(() => startScanning(currentDeviceId), 2000);
@@ -558,20 +683,151 @@
                 });
         }
 
+        function displayScanResult(data) {
+            // Populate Identitas Rumah
+            const identitasRumahContent = document.getElementById('identitas-rumah-content');
+            identitasRumahContent.innerHTML = `
+                <div class="grid gap-2">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">ID Rumah:</span>
+                        <span class="font-medium">${data.identitas_rumah.id_rumah}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Alamat:</span>
+                        <span class="font-medium text-right">${data.identitas_rumah.alamat_rumah}</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <span class="text-gray-600">Tipe Lantai:</span>
+                            <span class="ml-2 px-2 py-1 text-xs font-medium bg-gray-100 rounded-full">
+                                ${data.identitas_rumah.tipe_lantai}
+                            </span>
+                        </div>
+                        <div>
+                            <span class="text-gray-600">Atap:</span>
+                            <span class="ml-2 px-2 py-1 text-xs font-medium bg-gray-100 rounded-full">
+                                ${data.identitas_rumah.atap}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <span class="text-gray-600">Kamar Tidur:</span>
+                            <span class="ml-2 px-2 py-1 text-xs font-medium border rounded-full">
+                                ${data.identitas_rumah.jumlah_kamar_tidur}
+                            </span>
+                        </div>
+                        <div>
+                            <span class="text-gray-600">Kamar Mandi:</span>
+                            <span class="ml-2 px-2 py-1 text-xs font-medium border rounded-full">
+                                ${data.identitas_rumah.jumlah_kamar_mandi}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Populate Kartu Keluarga
+            const kkContent = document.getElementById('kartu-keluarga-content');
+            if (data.kartu_keluarga) {
+                kkContent.innerHTML = `
+                    <div class="grid gap-2">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Nomor KK:</span>
+                            <span class="font-medium">${data.kartu_keluarga.nomor_kk}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Tanggal Pembuatan:</span>
+                            <span class="font-medium">
+                                ${data.kartu_keluarga.tanggal_pembuatan}
+                            </span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                kkContent.innerHTML = '<p class="text-gray-500 italic">Tidak ada data kartu keluarga</p>';
+            }
+
+            // Populate Anggota Keluarga
+            const anggotaContent = document.getElementById('anggota-keluarga-content');
+            if (data.anggota_keluarga && data.anggota_keluarga.length > 0) {
+                anggotaContent.innerHTML = `
+                    <div class="grid gap-4">
+                        ${data.anggota_keluarga.map(anggota => `
+                                <div class="p-3 bg-gray-50 rounded-lg">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div>
+                                            <h4 class="font-semibold">${anggota.nama}</h4>
+                                            <p class="text-sm text-gray-600">NIK: ${anggota.nik}</p>
+                                        </div>
+                                        <span class="px-2 py-1 text-xs font-medium bg-emerald-100 text-emerald-800 rounded-full">
+                                            ${anggota.status_keluarga}
+                                        </span>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-2 text-sm">
+                                        <div>
+                                            <span class="text-gray-600">Tanggal Lahir:</span>
+                                            <p>${anggota.tanggal_lahir}</p>
+                                        </div>
+                                        <div>
+                                            <span class="text-gray-600">Pendidikan:</span>
+                                            <p>${anggota.pendidikan}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                    </div>
+                `;
+            } else {
+                anggotaContent.innerHTML = '<p class="text-gray-500 italic">Tidak ada data anggota keluarga</p>';
+            }
+
+            // Populate Verifikasi
+            const verifikasiContent = document.getElementById('verifikasi-content');
+            if (data.verifikasi) {
+                const statusColor = data.verifikasi.status === 'valid' ?
+                    'bg-emerald-100 text-emerald-800' :
+                    'bg-gray-100 text-gray-800';
+
+                verifikasiContent.innerHTML = `
+                    <div class="grid gap-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Status:</span>
+                            <span class="px-2 py-1 text-xs font-medium ${statusColor} rounded-full">
+                                ${data.verifikasi.status}
+                            </span>
+                        </div>
+                        ${data.verifikasi.keterangan ? `
+                                <div>
+                                    <span class="text-gray-600">Keterangan:</span>
+                                    <p class="mt-1 text-sm">${data.verifikasi.keterangan}</p>
+                                </div>
+                            ` : ''}
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Terakhir Update:</span>
+                            <span class="text-sm">${data.verifikasi.updated_at}</span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                verifikasiContent.innerHTML = '<p class="text-gray-500 italic">Tidak ada data verifikasi</p>';
+            }
+        }
+
         function addLoadingAnimation() {
             const loadingHTML = `
-            <div class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm flex items-center justify-center z-50">
-                <div class="bg-white rounded-xl p-6 shadow-xl max-w-sm w-full mx-4">
-                    <div class="flex items-center justify-center mb-4">
-                        <svg class="animate-spin h-8 w-8 text-emerald-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
+                <div class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm flex items-center justify-center z-50">
+                    <div class="bg-white rounded-xl p-6 shadow-xl max-w-sm w-full mx-4">
+                        <div class="flex items-center justify-center mb-4">
+                            <svg class="animate-spin h-8 w-8 text-emerald-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </div>
+                        <p class="text-center text-gray-600">Memproses QR Code...</p>
                     </div>
-                    <p class="text-center text-gray-600">Memproses QR Code...</p>
                 </div>
-            </div>
-        `;
+            `;
 
             const loadingElement = document.createElement('div');
             loadingElement.id = 'loading-overlay';
@@ -672,7 +928,7 @@
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
                 handleCameraError(new Error(
                     'Browser Anda tidak mendukung akses kamera. Mohon gunakan browser modern seperti Chrome atau Firefox terbaru.'
-                ));
+                    ));
                 return;
             }
 
