@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\KartuKeluarga;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Http\Request;
+use App\Models\KartuKeluarga;
+use App\Models\VerifikasiPenduduk;
+use Illuminate\Support\Facades\DB;
 
 class KartuKeluargaController extends Controller
 {
@@ -50,15 +51,23 @@ class KartuKeluargaController extends Controller
 
             DB::beginTransaction();
 
-            KartuKeluarga::create([
+            // Create Kartu Keluarga
+            $kartuKeluarga = KartuKeluarga::create([
                 'nomor_kk' => $validated['nomor_kk'],
                 'tanggal_pembuatan' => $validated['tanggal_pembuatan'],
+            ]);
+
+            // Create Verifikasi Penduduk
+            VerifikasiPenduduk::create([
+                'id_kk' => $kartuKeluarga->id_kk,
+                'status' => 'pending',
+                'keterangan' => 'Menunggu verifikasi'
             ]);
 
             DB::commit();
 
             return redirect()->route('kartu-keluarga.index')
-                ->with('success', 'Kartu Keluarga berhasil ditambahkan');
+                ->with('success', 'Kartu Keluarga berhasil ditambahkan dan menunggu verifikasi');
 
         } catch (Exception $e) {
             DB::rollBack();

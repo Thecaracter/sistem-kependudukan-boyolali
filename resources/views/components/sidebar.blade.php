@@ -61,46 +61,51 @@
                 </svg>
                 <span class="font-medium">Dashboard</span>
             </a>
+
             <!-- User Management -->
-            <div x-data="{ open: {{ request()->routeIs('users.*') || request()->routeIs('roles.*') ? 'true' : 'false' }} }" class="relative">
-                <button @click="open = !open"
-                    class="flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-medium 
-        transition-all text-primary-100 hover:bg-primary-800/40 hover:text-white group
-        {{ request()->routeIs('users.*') || request()->routeIs('roles.*') ? 'bg-primary-800/50' : '' }}">
-                    <div class="flex items-center gap-3">
-                        <svg class="h-5 w-5 transition-transform group-hover:scale-110" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+            @canany(['view-users', 'view-roles'])
+                <div x-data="{ open: {{ request()->routeIs('users.*') || request()->routeIs('roles.*') ? 'true' : 'false' }} }" class="relative">
+                    <button @click="open = !open"
+                        class="flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-medium 
+                    transition-all text-primary-100 hover:bg-primary-800/40 hover:text-white group
+                    {{ request()->routeIs('users.*') || request()->routeIs('roles.*') ? 'bg-primary-800/50' : '' }}">
+                        <div class="flex items-center gap-3">
+                            <svg class="h-5 w-5 transition-transform group-hover:scale-110" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                            <span class="font-medium">Manajemen User</span>
+                        </div>
+                        <svg :class="{ 'rotate-90': open }" class="h-5 w-5 transform transition-transform duration-200"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                         </svg>
-                        <span class="font-medium">Manajemen User</span>
+                    </button>
+
+                    <div x-show="open" x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="opacity-0 -translate-y-2"
+                        x-transition:enter-end="opacity-100 translate-y-0" class="mt-1.5 space-y-1 px-3">
+                        @can('view-users')
+                            <a href="{{ route('users.index') }}"
+                                class="block rounded-lg px-4 py-2.5 text-sm text-primary-100 hover:bg-primary-800/40 hover:text-white
+                            transition-all hover:pl-5 font-medium {{ request()->routeIs('users.*') ? 'bg-primary-800/40 text-white' : '' }}">
+                                Data User
+                            </a>
+                        @endcan
+
+                        @can('view-roles')
+                            <a href="{{ route('roles.index') }}"
+                                class="block rounded-lg px-4 py-2.5 text-sm text-primary-100 hover:bg-primary-800/40 hover:text-white
+                            transition-all hover:pl-5 font-medium {{ request()->routeIs('roles.*') ? 'bg-primary-800/40 text-white' : '' }}">
+                                Data Role
+                            </a>
+                        @endcan
                     </div>
-                    <svg :class="{ 'rotate-90': open }" class="h-5 w-5 transform transition-transform duration-200"
-                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                </button>
-
-                <div x-show="open" x-transition:enter="transition ease-out duration-200"
-                    x-transition:enter-start="opacity-0 -translate-y-2"
-                    x-transition:enter-end="opacity-100 translate-y-0" class="mt-1.5 space-y-1 px-3">
-                    @can('view-users')
-                        <a href="{{ route('users.index') }}"
-                            class="block rounded-lg px-4 py-2.5 text-sm text-primary-100 hover:bg-primary-800/40 hover:text-white
-                transition-all hover:pl-5 font-medium {{ request()->routeIs('users.*') ? 'bg-primary-800/40 text-white' : '' }}">
-                            Data User
-                        </a>
-                    @endcan
-
-                    @can('view-roles')
-                        <a href="{{ route('roles.index') }}"
-                            class="block rounded-lg px-4 py-2.5 text-sm text-primary-100 hover:bg-primary-800/40 hover:text-white
-                transition-all hover:pl-5 font-medium {{ request()->routeIs('roles.*') ? 'bg-primary-800/40 text-white' : '' }}">
-                            Data Role
-                        </a>
-                    @endcan
                 </div>
-            </div>
+            @endcanany
+
+            <!-- Kartu Keluarga -->
             @can('view-kartu-keluarga')
                 <div x-data="{ open: {{ request()->routeIs('kartu-keluarga.*') ? 'true' : 'false' }} }" class="relative">
                     <button @click="open = !open"
@@ -131,6 +136,33 @@
                         </a>
                     </div>
                 </div>
+            @endcan
+
+            <!-- Verifikasi Penduduk -->
+            @can('verify-documents')
+                <a href="{{ route('verifikasi.index') }}"
+                    class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all group 
+           {{ request()->routeIs('verifikasi.*') ? 'bg-primary-800/70 text-white shadow-lg border border-primary-700' : 'text-primary-100 hover:bg-primary-800/40 hover:text-white' }}">
+                    <svg class="h-5 w-5 transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span class="font-medium">Verifikasi Penduduk</span>
+                </a>
+            @endcan\
+            <!-- QR Scanner Menu - Add this after Kartu Keluarga and before Verifikasi Penduduk -->
+            @can('view-identitas-rumah')
+                <a href="{{ route('qr-scanner.index') }}"
+                    class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all group 
+    {{ request()->routeIs('qr-scanner.*') ? 'bg-primary-800/70 text-white shadow-lg border border-primary-700' : 'text-primary-100 hover:bg-primary-800/40 hover:text-white' }}">
+                    <svg class="h-5 w-5 transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                    </svg>
+                    <span class="font-medium">Scan QR</span>
+                </a>
             @endcan
         </div>
     </nav>

@@ -114,17 +114,18 @@
                                         </td>
                                         <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <div class="flex items-center justify-end gap-1 sm:gap-2">
-                                                <a href="{{ route('identitas-rumah.download', $item->id_rumah) }}"
-                                                    class="inline-flex items-center p-1 sm:px-3 sm:py-2 bg-gray-50 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200">
-                                                    <svg class="w-4 h-4 sm:mr-1.5" fill="none" stroke="currentColor"
-                                                        viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                                    </svg>
-                                                    <span class="hidden sm:inline">QR</span>
-                                                </a>
-
+                                                @can('download-qr-code')
+                                                    <a href="{{ route('identitas-rumah.download', $item->id_rumah) }}"
+                                                        class="inline-flex items-center p-1 sm:px-3 sm:py-2 bg-gray-50 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                                                        <svg class="w-4 h-4 sm:mr-1.5" fill="none" stroke="currentColor"
+                                                            viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                                        </svg>
+                                                        <span class="hidden sm:inline">QR</span>
+                                                    </a>
+                                                @endcan
                                                 @can('edit-identitas-rumah')
                                                     <button onclick='editRumah(@json($item))'
                                                         class="inline-flex items-center p-1 sm:px-3 sm:py-2 bg-primary-50 text-primary-700 hover:bg-primary-100 rounded-lg transition-colors duration-200">

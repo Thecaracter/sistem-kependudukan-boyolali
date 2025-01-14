@@ -3,9 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\KartuKeluargaController;
 use App\Http\Controllers\PendudukController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\QRScannerController;
+use App\Http\Controllers\VerifikasiController;
+use App\Http\Controllers\KartuKeluargaController;
 use App\Http\Controllers\IdentitasRumahController;
 
 Route::get('/', function () {
@@ -74,4 +76,14 @@ Route::middleware('auth')->group(function () {
             Route::delete('/{id_kk}/anggota/{penduduk}', 'destroy')->name('penduduk.destroy');
         });
     });
+    Route::prefix('verifikasi')->group(function () {
+        Route::controller(VerifikasiController::class)->group(function () {
+            Route::get('/', 'index')->name('verifikasi.index');
+            Route::put('/{id_penduduk}/approve', 'approve')->name('verifikasi.approve');
+            Route::put('/{id_penduduk}/reject', 'reject')->name('verifikasi.reject');
+        });
+    });
+
+    Route::get('/scan-qr', [QRScannerController::class, 'index'])->name('qr-scanner.index');
+    Route::post('/scan-qr', [QRScannerController::class, 'scan'])->name('qr-scanner.scan');
 });

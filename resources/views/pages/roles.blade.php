@@ -123,10 +123,10 @@
                                                     @can('edit-roles')
                                                         <button
                                                             onclick="editRole({
-                                                        id: '{{ $role->id }}',
-                                                        name: '{{ $role->name }}',
-                                                        permissions: {{ $role->permissions->pluck('name') }}
-                                                    })"
+                                                            id: '{{ $role->id }}',
+                                                            name: '{{ $role->name }}',
+                                                            permissions: {{ $role->permissions->pluck('name') }}
+                                                        })"
                                                             class="inline-flex items-center p-1 sm:px-3 sm:py-2 bg-primary-50 text-primary-700 hover:bg-primary-100 rounded-lg transition-colors duration-200">
                                                             <svg class="w-4 h-4 sm:mr-1.5" fill="none" stroke="currentColor"
                                                                 viewBox="0 0 24 24">
@@ -262,7 +262,7 @@
                             <div class="group-permissions">
                                 <div class="group-title">Identitas Rumah</div>
                                 <div class="permissions-grid">
-                                    @foreach ($permissions->filter(fn($p) => str_contains($p->name, 'identitas-rumah')) as $permission)
+                                    @foreach ($permissions->filter(fn($p) => str_contains($p->name, 'identitas-rumah') || str_contains($p->name, 'qr-code')) as $permission)
                                         <div class="flex items-center">
                                             <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
                                                 id="create_{{ $permission->id }}"
@@ -429,7 +429,7 @@
                             <div class="group-permissions">
                                 <div class="group-title">Identitas Rumah</div>
                                 <div class="permissions-grid">
-                                    @foreach ($permissions->filter(fn($p) => str_contains($p->name, 'identitas-rumah')) as $permission)
+                                    @foreach ($permissions->filter(fn($p) => str_contains($p->name, 'identitas-rumah') || str_contains($p->name, 'qr-code')) as $permission)
                                         <div class="flex items-center">
                                             <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
                                                 id="edit_{{ $permission->id }}"

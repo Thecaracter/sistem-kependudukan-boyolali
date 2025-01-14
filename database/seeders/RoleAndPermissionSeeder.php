@@ -26,7 +26,7 @@ class RoleAndPermissionSeeder extends Seeder
             'edit-users',
             'delete-users',
 
-            //roles
+            // Roles 
             'view-roles',
             'create-roles',
             'edit-roles',
@@ -49,6 +49,7 @@ class RoleAndPermissionSeeder extends Seeder
             'create-identitas-rumah',
             'edit-identitas-rumah',
             'delete-identitas-rumah',
+            'download-qr-code', // Permission baru untuk download QR
 
             // Verifikasi
             'verify-documents',
@@ -64,7 +65,7 @@ class RoleAndPermissionSeeder extends Seeder
             Permission::create(['name' => $permission]);
         }
 
-        // Create Roles and Default Users
+        // Create Roles and Default Users 
         $roles = [
             'Admin' => [
                 'permissions' => Permission::all(),
@@ -90,6 +91,7 @@ class RoleAndPermissionSeeder extends Seeder
                     'view-identitas-rumah',
                     'create-identitas-rumah',
                     'edit-identitas-rumah',
+                    'download-qr-code', // Bisa download QR
                     'view-reports',
                     'export-data'
                 ],
@@ -115,6 +117,7 @@ class RoleAndPermissionSeeder extends Seeder
                     'view-identitas-rumah',
                     'create-identitas-rumah',
                     'edit-identitas-rumah',
+                    'download-qr-code', // Bisa download QR
                     'view-reports',
                     'create-reports',
                     'export-data'
@@ -135,6 +138,7 @@ class RoleAndPermissionSeeder extends Seeder
                     'view-penduduk',
                     'view-kartu-keluarga',
                     'view-identitas-rumah',
+                    'download-qr-code', // Bisa download QR
                     'verify-documents',
                     'view-verifications',
                     'view-reports'
@@ -155,6 +159,7 @@ class RoleAndPermissionSeeder extends Seeder
                     'view-penduduk',
                     'view-kartu-keluarga',
                     'view-identitas-rumah',
+                    'download-qr-code', // Bisa download QR
                     'view-reports',
                     'view-verifications'
                 ],
@@ -174,6 +179,7 @@ class RoleAndPermissionSeeder extends Seeder
                     'view-penduduk',
                     'view-kartu-keluarga',
                     'view-identitas-rumah',
+                    'download-qr-code', // Bisa download QR
                     'view-reports',
                     'view-verifications'
                 ],
@@ -190,18 +196,16 @@ class RoleAndPermissionSeeder extends Seeder
             ]
         ];
 
+        // Create roles and users
         foreach ($roles as $roleName => $roleData) {
-            // Create Role
             $role = Role::create(['name' => $roleName]);
 
-            // Assign Permissions
             if ($roleName === 'Admin') {
                 $role->givePermissionTo($roleData['permissions']);
             } else {
                 $role->givePermissionTo($roleData['permissions']);
             }
 
-            // Create Users for this role
             foreach ($roleData['users'] as $userData) {
                 $user = User::create([
                     'username' => $userData['username'],

@@ -265,6 +265,7 @@ class IdentitasRumahController extends Controller
     public function download(IdentitasRumah $identitasRumah)
     {
         try {
+            $this->authorize('view-identitas-rumah');
             Log::info('Attempting to download QR Code', [
                 'rumah_id' => $identitasRumah->id_rumah,
                 'user_id' => auth()->id()
