@@ -342,111 +342,118 @@
     </div>
 
     <!-- Modal Result -->
-    <div id="scan-result-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
-        <div class="min-h-screen px-4 text-center">
-            <!-- Background overlay -->
-            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-            </div>
+    <div id="scan-result-modal" class="fixed inset-0 z-50 hidden opacity-0 transition-opacity duration-300">
+        <!-- Backdrop with blur -->
+        <div class="fixed inset-0 bg-black/60 backdrop-blur-sm"></div>
 
-            <!-- Modal panel -->
-            <div
-                class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <div class="sm:flex sm:items-start">
-                        <div class="w-full">
-                            <!-- Header -->
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 class="text-lg leading-6 font-medium text-gray-900">
-                                    Data Hasil Scan QR Code
-                                </h3>
-                                <button type="button" onclick="closeModal()" class="text-gray-400 hover:text-gray-500">
-                                    <span class="sr-only">Close</span>
-                                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-
-                            <!-- Content -->
-                            <div class="max-h-[70vh] overflow-y-auto pr-2">
-                                <!-- Identitas Rumah Section -->
-                                <div class="bg-white rounded-lg shadow-sm mb-4 border">
-                                    <div class="px-4 py-3 border-b">
-                                        <h4 class="text-base font-semibold text-gray-900 flex items-center gap-2">
-                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                                                stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                                            </svg>
-                                            Identitas Rumah
-                                        </h4>
-                                    </div>
-                                    <div class="p-4" id="identitas-rumah-content">
-                                        <!-- Content will be inserted here -->
-                                    </div>
-                                </div>
-
-                                <!-- Kartu Keluarga Section -->
-                                <div class="bg-white rounded-lg shadow-sm mb-4 border">
-                                    <div class="px-4 py-3 border-b">
-                                        <h4 class="text-base font-semibold text-gray-900 flex items-center gap-2">
-                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                                                stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                            </svg>
-                                            Data Kartu Keluarga
-                                        </h4>
-                                    </div>
-                                    <div class="p-4" id="kartu-keluarga-content">
-                                        <!-- Content will be inserted here -->
-                                    </div>
-                                </div>
-
-                                <!-- Anggota Keluarga Section -->
-                                <div class="bg-white rounded-lg shadow-sm mb-4 border">
-                                    <div class="px-4 py-3 border-b">
-                                        <h4 class="text-base font-semibold text-gray-900 flex items-center gap-2">
-                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                                                stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                                            </svg>
-                                            Anggota Keluarga
-                                        </h4>
-                                    </div>
-                                    <div class="p-4" id="anggota-keluarga-content">
-                                        <!-- Content will be inserted here -->
-                                    </div>
-                                </div>
-
-                                <!-- Verifikasi Section -->
-                                <div class="bg-white rounded-lg shadow-sm border">
-                                    <div class="px-4 py-3 border-b">
-                                        <h4 class="text-base font-semibold text-gray-900 flex items-center gap-2">
-                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                                                stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                            Status Verifikasi
-                                        </h4>
-                                    </div>
-                                    <div class="p-4" id="verifikasi-content">
-                                        <!-- Content will be inserted here -->
-                                    </div>
-                                </div>
-                            </div>
+        <!-- Modal Container -->
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-end justify-center sm:items-center p-0 sm:p-4">
+                <!-- Modal Content -->
+                <div
+                    class="relative transform w-full max-w-2xl bg-white sm:rounded-2xl shadow-2xl transition-all duration-300">
+                    <!-- Header with gradient -->
+                    <div class="bg-gradient-to-r from-emerald-600 to-teal-600 p-4 sm:p-6">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg sm:text-xl font-bold text-white flex items-center space-x-3">
+                                <svg class="w-6 h-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                </svg>
+                                <span>Data Hasil Scan QR Code</span>
+                            </h3>
+                            <button type="button" onclick="closeModal()"
+                                class="rounded-lg p-2 text-white/80 hover:text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/20">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
                         </div>
                     </div>
-                </div>
-                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="button" onclick="closeModal()"
-                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-emerald-600 text-base font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 sm:ml-3 sm:w-auto sm:text-sm">
-                        Tutup
-                    </button>
+
+                    <!-- Content Area -->
+                    <div
+                        class="max-h-[calc(100vh-16rem)] sm:max-h-[calc(100vh-12rem)] overflow-y-auto px-4 py-5 sm:p-6 space-y-4">
+                        <!-- Identitas Rumah Card -->
+                        <div
+                            class="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200">
+                            <div class="p-4 border-b border-gray-100 bg-gray-50/50">
+                                <h4 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+                                    <svg class="w-5 h-5 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                    </svg>
+                                    Identitas Rumah
+                                </h4>
+                            </div>
+                            <div class="p-4 sm:p-5" id="identitas-rumah-content"></div>
+                        </div>
+
+                        <!-- Kartu Keluarga Card -->
+                        <div
+                            class="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200">
+                            <div class="p-4 border-b border-gray-100 bg-gray-50/50">
+                                <h4 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+                                    <svg class="w-5 h-5 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                    Data Kartu Keluarga
+                                </h4>
+                            </div>
+                            <div class="p-4 sm:p-5" id="kartu-keluarga-content"></div>
+                        </div>
+
+                        <!-- Anggota Keluarga Card -->
+                        <div
+                            class="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200">
+                            <div class="p-4 border-b border-gray-100 bg-gray-50/50">
+                                <h4 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+                                    <svg class="w-5 h-5 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                    </svg>
+                                    Anggota Keluarga
+                                </h4>
+                            </div>
+                            <div class="p-4 sm:p-5" id="anggota-keluarga-content"></div>
+                        </div>
+
+                        <!-- Verifikasi Card -->
+                        <div
+                            class="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200">
+                            <div class="p-4 border-b border-gray-100 bg-gray-50/50">
+                                <h4 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+                                    <svg class="w-5 h-5 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Status Verifikasi
+                                </h4>
+                            </div>
+                            <div class="p-4 sm:p-5" id="verifikasi-content"></div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="border-t border-gray-100 bg-gray-50/50 px-4 py-4 sm:px-6">
+                        <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+                            <button type="button" onclick="closeModal()"
+                                class="group w-full sm:w-auto inline-flex justify-center items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all duration-200">
+                                <svg class="w-5 h-5 transition-transform group-hover:-translate-y-0.5" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                                Tutup
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -754,28 +761,28 @@
                 anggotaContent.innerHTML = `
                     <div class="grid gap-4">
                         ${data.anggota_keluarga.map(anggota => `
-                                <div class="p-3 bg-gray-50 rounded-lg">
-                                    <div class="flex justify-between items-start mb-2">
-                                        <div>
-                                            <h4 class="font-semibold">${anggota.nama}</h4>
-                                            <p class="text-sm text-gray-600">NIK: ${anggota.nik}</p>
+                                    <div class="p-3 bg-gray-50 rounded-lg">
+                                        <div class="flex justify-between items-start mb-2">
+                                            <div>
+                                                <h4 class="font-semibold">${anggota.nama}</h4>
+                                                <p class="text-sm text-gray-600">NIK: ${anggota.nik}</p>
+                                            </div>
+                                            <span class="px-2 py-1 text-xs font-medium bg-emerald-100 text-emerald-800 rounded-full">
+                                                ${anggota.status_keluarga}
+                                            </span>
                                         </div>
-                                        <span class="px-2 py-1 text-xs font-medium bg-emerald-100 text-emerald-800 rounded-full">
-                                            ${anggota.status_keluarga}
-                                        </span>
+                                        <div class="grid grid-cols-2 gap-2 text-sm">
+                                            <div>
+                                                <span class="text-gray-600">Tanggal Lahir:</span>
+                                                <p>${anggota.tanggal_lahir}</p>
+                                            </div>
+                                            <div>
+                                                <span class="text-gray-600">Pendidikan:</span>
+                                                <p>${anggota.pendidikan}</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="grid grid-cols-2 gap-2 text-sm">
-                                        <div>
-                                            <span class="text-gray-600">Tanggal Lahir:</span>
-                                            <p>${anggota.tanggal_lahir}</p>
-                                        </div>
-                                        <div>
-                                            <span class="text-gray-600">Pendidikan:</span>
-                                            <p>${anggota.pendidikan}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            `).join('')}
+                                `).join('')}
                     </div>
                 `;
             } else {
@@ -798,11 +805,11 @@
                             </span>
                         </div>
                         ${data.verifikasi.keterangan ? `
-                                <div>
-                                    <span class="text-gray-600">Keterangan:</span>
-                                    <p class="mt-1 text-sm">${data.verifikasi.keterangan}</p>
-                                </div>
-                            ` : ''}
+                                    <div>
+                                        <span class="text-gray-600">Keterangan:</span>
+                                        <p class="mt-1 text-sm">${data.verifikasi.keterangan}</p>
+                                    </div>
+                                ` : ''}
                         <div class="flex justify-between">
                             <span class="text-gray-600">Terakhir Update:</span>
                             <span class="text-sm">${data.verifikasi.updated_at}</span>
@@ -928,7 +935,7 @@
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
                 handleCameraError(new Error(
                     'Browser Anda tidak mendukung akses kamera. Mohon gunakan browser modern seperti Chrome atau Firefox terbaru.'
-                    ));
+                ));
                 return;
             }
 
