@@ -311,6 +311,24 @@
                                     @endforeach
                                 </div>
                             </div>
+                            <!-- QR Scanner -->
+                            <div class="group-permissions">
+                                <div class="group-title">QR Scanner</div>
+                                <div class="permissions-grid">
+                                    @foreach ($permissions->filter(fn($p) => str_contains($p->name, 'scan-qr') || str_contains($p->name, 'export-scan')) as $permission)
+                                        <div class="flex items-center">
+                                            <!-- Untuk Modal Create -->
+                                            <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
+                                                id="create_{{ $permission->id }}"
+                                                class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
+                                            <label for="create_{{ $permission->id }}"
+                                                class="ml-2 block text-sm text-gray-900">
+                                                {{ $permission->name }}
+                                            </label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -466,6 +484,23 @@
                                 <div class="group-title">Laporan</div>
                                 <div class="permissions-grid">
                                     @foreach ($permissions->filter(fn($p) => str_contains($p->name, 'reports')) as $permission)
+                                        <div class="flex items-center">
+                                            <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
+                                                id="edit_{{ $permission->id }}"
+                                                class="permission-checkbox h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
+                                            <label for="edit_{{ $permission->id }}"
+                                                class="ml-2 block text-sm text-gray-900">
+                                                {{ $permission->name }}
+                                            </label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                            <!-- Scan QR -->
+                            <div class="group-permissions">
+                                <div class="group-title">QR Scanner</div>
+                                <div class="permissions-grid">
+                                    @foreach ($permissions->filter(fn($p) => str_contains($p->name, 'scan-qr') || str_contains($p->name, 'export-scan')) as $permission)
                                         <div class="flex items-center">
                                             <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
                                                 id="edit_{{ $permission->id }}"

@@ -10,9 +10,6 @@ use Illuminate\Support\Facades\Hash;
 
 class RoleAndPermissionSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         // Reset cached roles and permissions
@@ -49,11 +46,15 @@ class RoleAndPermissionSeeder extends Seeder
             'create-identitas-rumah',
             'edit-identitas-rumah',
             'delete-identitas-rumah',
-            'download-qr-code', // Permission baru untuk download QR
+            'download-qr-code',
 
             // Verifikasi
             'verify-documents',
             'view-verifications',
+
+            // QR Scanner
+            'scan-qr',
+
 
             // Laporan
             'view-reports',
@@ -91,7 +92,9 @@ class RoleAndPermissionSeeder extends Seeder
                     'view-identitas-rumah',
                     'create-identitas-rumah',
                     'edit-identitas-rumah',
-                    'download-qr-code', // Bisa download QR
+                    'download-qr-code',
+                    'scan-qr',
+
                     'view-reports',
                     'export-data'
                 ],
@@ -117,7 +120,9 @@ class RoleAndPermissionSeeder extends Seeder
                     'view-identitas-rumah',
                     'create-identitas-rumah',
                     'edit-identitas-rumah',
-                    'download-qr-code', // Bisa download QR
+                    'download-qr-code',
+                    'scan-qr',
+
                     'view-reports',
                     'create-reports',
                     'export-data'
@@ -138,9 +143,10 @@ class RoleAndPermissionSeeder extends Seeder
                     'view-penduduk',
                     'view-kartu-keluarga',
                     'view-identitas-rumah',
-                    'download-qr-code', // Bisa download QR
+                    'download-qr-code',
                     'verify-documents',
                     'view-verifications',
+                    'scan-qr',
                     'view-reports'
                 ],
                 'users' => [
@@ -159,7 +165,9 @@ class RoleAndPermissionSeeder extends Seeder
                     'view-penduduk',
                     'view-kartu-keluarga',
                     'view-identitas-rumah',
-                    'download-qr-code', // Bisa download QR
+                    'download-qr-code',
+                    'scan-qr',
+
                     'view-reports',
                     'view-verifications'
                 ],
@@ -179,7 +187,9 @@ class RoleAndPermissionSeeder extends Seeder
                     'view-penduduk',
                     'view-kartu-keluarga',
                     'view-identitas-rumah',
-                    'download-qr-code', // Bisa download QR
+                    'download-qr-code',
+                    'scan-qr',
+
                     'view-reports',
                     'view-verifications'
                 ],
@@ -199,12 +209,7 @@ class RoleAndPermissionSeeder extends Seeder
         // Create roles and users
         foreach ($roles as $roleName => $roleData) {
             $role = Role::create(['name' => $roleName]);
-
-            if ($roleName === 'Admin') {
-                $role->givePermissionTo($roleData['permissions']);
-            } else {
-                $role->givePermissionTo($roleData['permissions']);
-            }
+            $role->givePermissionTo($roleData['permissions']);
 
             foreach ($roleData['users'] as $userData) {
                 $user = User::create([

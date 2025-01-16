@@ -152,10 +152,10 @@
                 </a>
             @endcan\
             <!-- QR Scanner Menu - Add this after Kartu Keluarga and before Verifikasi Penduduk -->
-            @can('view-identitas-rumah')
+            @can('scan-qr')
                 <a href="{{ route('qr-scanner.index') }}"
                     class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all group 
-    {{ request()->routeIs('qr-scanner.*') ? 'bg-primary-800/70 text-white shadow-lg border border-primary-700' : 'text-primary-100 hover:bg-primary-800/40 hover:text-white' }}">
+                {{ request()->routeIs('qr-scanner.*') ? 'bg-primary-800/70 text-white shadow-lg border border-primary-700' : 'text-primary-100 hover:bg-primary-800/40 hover:text-white' }}">
                     <svg class="h-5 w-5 transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"

@@ -16,8 +16,9 @@ class KartuKeluargaController extends Controller
             $this->authorize('view-kartu-keluarga');
 
             $search = $request->search;
+            $status = $request->status;
 
-            $kartuKeluarga = KartuKeluarga::with(['kepalaKeluarga', 'identitasRumah'])
+            $kartuKeluarga = KartuKeluarga::with(['kepalaKeluarga', 'identitasRumah', 'verifikasi'])
                 ->when($search, function ($query) use ($search) {
                     $query->where('nomor_kk', 'like', "%{$search}%")
                         ->orWhereHas('kepalaKeluarga', function ($q) use ($search) {
@@ -29,10 +30,28 @@ class KartuKeluargaController extends Controller
                                 ->orWhere('nik', 'like', "%{$search}%");
                         });
                 })
+                ->when($status, function ($query) use ($status) {
+                    $query->whereHas('verifikasi', function ($q) use ($status) {
+                        $q->where('status', $status);
+                    });
+                })
                 ->latest()
                 ->get();
 
-            return view('pages.kartu-keluarga', compact('kartuKeluarga', 'search'));
+            $statusCount = [
+                'total' => $kartuKeluarga->count(),
+                'pending' => $kartuKeluarga->filter(function ($item) {
+                    return $item->verifikasi->status === 'pending';
+                })->count(),
+                'verified' => $kartuKeluarga->filter(function ($item) {
+                    return $item->verifikasi->status === 'verified';
+                })->count(),
+                'rejected' => $kartuKeluarga->filter(function ($item) {
+                    return $item->verifikasi->status === 'rejected';
+                })->count(),
+            ];
+
+            return view('pages.kartu-keluarga', compact('kartuKeluarga', 'search', 'status', 'statusCount'));
         } catch (Exception $e) {
             return redirect()->back()
                 ->with('error', 'Terjadi kesalahan saat memuat data: ' . $e->getMessage());
@@ -61,7 +80,7 @@ class KartuKeluargaController extends Controller
             VerifikasiPenduduk::create([
                 'id_kk' => $kartuKeluarga->id_kk,
                 'status' => 'pending',
-                'keterangan' => 'Menunggu verifikasi'
+                'keterangan' => 'Menunggu verifikasi oleh petugas'
             ]);
 
             DB::commit();
@@ -95,10 +114,16 @@ class KartuKeluargaController extends Controller
                 'tanggal_pembuatan' => $validated['tanggal_pembuatan'],
             ]);
 
+            // Reset verification status if KK data is updated
+            $kartuKeluarga->verifikasi()->update([
+                'status' => 'pending',
+                'keterangan' => 'Menunggu verifikasi ulang setelah perubahan data'
+            ]);
+
             DB::commit();
 
             return redirect()->route('kartu-keluarga.index')
-                ->with('success', 'Kartu Keluarga berhasil diperbarui');
+                ->with('success', 'Kartu Keluarga berhasil diperbarui dan menunggu verifikasi ulang');
 
         } catch (Exception $e) {
             DB::rollBack();
@@ -116,11 +141,12 @@ class KartuKeluargaController extends Controller
 
             DB::beginTransaction();
 
-            // Cek apakah memiliki anggota keluarga
             if ($kartuKeluarga->anggotaKeluarga()->exists()) {
                 throw new Exception('Tidak dapat menghapus KK yang masih memiliki anggota');
             }
 
+            // Delete verifikasi first due to foreign key constraint
+            $kartuKeluarga->verifikasi()->delete();
             $kartuKeluarga->delete();
 
             DB::commit();

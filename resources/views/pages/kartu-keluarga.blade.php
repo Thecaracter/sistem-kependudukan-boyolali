@@ -26,11 +26,90 @@
             padding: 1.5rem;
             border-radius: 0.5rem;
         }
+
+        .status-indicator {
+            transition: all 0.2s ease-in-out;
+        }
+
+        .status-indicator:hover {
+            transform: translateY(-1px);
+        }
+
+        .line-clamp-1 {
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+        }
+
+        .progress-line {
+            flex: 1;
+            height: 2px;
+            position: relative;
+        }
+
+        .progress-step {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 10;
+        }
     </style>
 @endpush
 
 @section('content')
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Status Filter Cards -->
+        <div class="mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+            <a href="{{ route('kartu-keluarga.index') }}"
+                class="p-4 rounded-xl border transition-all {{ !request('status') ? 'bg-gray-100 border-gray-300' : 'bg-white border-gray-200 hover:bg-gray-50' }}">
+                <div class="flex items-center justify-between">
+                    <p class="text-sm font-medium text-gray-600">Total KK</p>
+                    <span class="text-lg font-semibold text-gray-900">{{ $statusCount['total'] }}</span>
+                </div>
+            </a>
+
+            <a href="{{ route('kartu-keluarga.index', ['status' => 'pending']) }}"
+                class="p-4 rounded-xl border transition-all {{ request('status') === 'pending' ? 'bg-yellow-50 border-yellow-200' : 'bg-white border-gray-200 hover:bg-gray-50' }}">
+                <div class="flex items-center justify-between">
+                    <p class="text-sm font-medium text-gray-600">Menunggu Verifikasi</p>
+                    <span class="inline-flex items-center gap-1">
+                        <span
+                            class="text-lg font-semibold {{ request('status') === 'pending' ? 'text-yellow-600' : 'text-gray-900' }}">
+                            {{ $statusCount['pending'] }}
+                        </span>
+                    </span>
+                </div>
+            </a>
+
+            <a href="{{ route('kartu-keluarga.index', ['status' => 'verified']) }}"
+                class="p-4 rounded-xl border transition-all {{ request('status') === 'verified' ? 'bg-green-50 border-green-200' : 'bg-white border-gray-200 hover:bg-gray-50' }}">
+                <div class="flex items-center justify-between">
+                    <p class="text-sm font-medium text-gray-600">Terverifikasi</p>
+                    <span class="inline-flex items-center gap-1">
+                        <span
+                            class="text-lg font-semibold {{ request('status') === 'verified' ? 'text-green-600' : 'text-gray-900' }}">
+                            {{ $statusCount['verified'] }}
+                        </span>
+                    </span>
+                </div>
+            </a>
+
+            <a href="{{ route('kartu-keluarga.index', ['status' => 'rejected']) }}"
+                class="p-4 rounded-xl border transition-all {{ request('status') === 'rejected' ? 'bg-red-50 border-red-200' : 'bg-white border-gray-200 hover:bg-gray-50' }}">
+                <div class="flex items-center justify-between">
+                    <p class="text-sm font-medium text-gray-600">Ditolak</p>
+                    <span class="inline-flex items-center gap-1">
+                        <span
+                            class="text-lg font-semibold {{ request('status') === 'rejected' ? 'text-red-600' : 'text-gray-900' }}">
+                            {{ $statusCount['rejected'] }}
+                        </span>
+                    </span>
+                </div>
+            </a>
+        </div>
+
         <div class="bg-white rounded-xl shadow-sm">
             <div class="p-4 sm:p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
                 <h1 class="text-xl sm:text-2xl font-semibold text-gray-900">Data Kartu Keluarga</h1>
@@ -97,6 +176,10 @@
                                         Alamat
                                     </th>
                                     <th
+                                        class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Status
+                                    </th>
+                                    <th
                                         class="px-3 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Aksi
                                     </th>
@@ -125,7 +208,8 @@
                                                 <!-- Alamat Mobile -->
                                                 <div class="text-xs">
                                                     @if ($item->identitasRumah)
-                                                        <div class="text-gray-500">{{ $item->identitasRumah->alamat_rumah }}
+                                                        <div class="text-gray-500">
+                                                            {{ $item->identitasRumah->alamat_rumah }}
                                                         </div>
                                                     @endif
 
@@ -188,6 +272,65 @@
                                                 </a>
                                             @endcan
                                         </td>
+
+                                        <td class="px-3 sm:px-6 py-4">
+                                            @php
+                                                $status = $item->verifikasi->status ?? 'pending';
+                                                $statusInfo = [
+                                                    'pending' => [
+                                                        'bg' => 'bg-yellow-100',
+                                                        'text' => 'text-yellow-800',
+                                                        'border' => 'border-yellow-200',
+                                                        'icon' => '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>',
+                                                    ],
+                                                    'verified' => [
+                                                        'bg' => 'bg-green-100',
+                                                        'text' => 'text-green-800',
+                                                        'border' => 'border-green-200',
+                                                        'icon' => '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>',
+                                                    ],
+                                                    'rejected' => [
+                                                        'bg' => 'bg-red-100',
+                                                        'text' => 'text-red-800',
+                                                        'border' => 'border-red-200',
+                                                        'icon' => '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>',
+                                                    ],
+                                                ][$status];
+                                            @endphp
+
+                                            <div class="flex flex-col gap-1">
+                                                <!-- Status Badge -->
+                                                <div class="flex items-center gap-2">
+                                                    <div
+                                                        class="flex items-center px-2.5 py-1.5 rounded-full border gap-1.5
+                                                    {{ $statusInfo['bg'] }} {{ $statusInfo['text'] }} {{ $statusInfo['border'] }}">
+                                                        {!! $statusInfo['icon'] !!}
+                                                        <span class="text-sm font-medium">{{ ucfirst($status) }}</span>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Additional Info -->
+                                                @if ($item->verifikasi && $item->verifikasi->keterangan)
+                                                    <p class="text-xs text-gray-500 line-clamp-1">
+                                                        {{ $item->verifikasi->keterangan }}
+                                                    </p>
+                                                @endif
+
+                                                <!-- Last Updated -->
+                                                @if ($item->verifikasi)
+                                                    <span class="text-xs text-gray-400">
+                                                        {{ $item->verifikasi->updated_at->diffForHumans() }}
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </td>
+
                                         <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <div class="flex items-center justify-end gap-1 sm:gap-2">
                                                 <!-- Tombol Lihat Anggota -->
@@ -232,7 +375,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">
                                             Belum ada data kartu keluarga
                                         </td>
                                     </tr>
@@ -362,6 +505,11 @@
 
     @push('scripts')
         <script>
+            // Get all modals
+            const createModal = document.getElementById('createModal');
+            const editModal = document.getElementById('editModal');
+            const deleteModal = document.getElementById('deleteModal');
+
             function editKK(kartuKeluarga) {
                 document.getElementById('editForm').action = `/kartu-keluarga/${kartuKeluarga.id_kk}`;
                 document.getElementById('edit_nomor_kk').value = kartuKeluarga.nomor_kk;
@@ -374,7 +522,7 @@
                 deleteModal.showModal();
             }
 
-            // Handle alerts with better styling
+            // Handle alerts
             @if (session('success'))
                 const successMessage = "{{ session('success') }}";
                 const alertDiv = document.createElement('div');
@@ -382,12 +530,12 @@
                     'fixed top-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded z-50';
                 alertDiv.role = 'alert';
                 alertDiv.innerHTML = `
-        <div class="flex">
-            <span class="mr-2">✓</span>
-            <span>${successMessage}</span>
-            <span class="ml-4 cursor-pointer" onclick="this.parentElement.parentElement.remove()">×</span>
-        </div>
-    `;
+                   <div class="flex">
+                       <span class="mr-2">✓</span>
+                       <span>${successMessage}</span>
+                       <span class="ml-4 cursor-pointer" onclick="this.parentElement.parentElement.remove()">×</span>
+                   </div>
+               `;
                 document.body.appendChild(alertDiv);
                 setTimeout(() => alertDiv.remove(), 5000);
             @endif
@@ -398,12 +546,12 @@
                 errorDiv.className = 'fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded z-50';
                 errorDiv.role = 'alert';
                 errorDiv.innerHTML = `
-        <div class="flex">
-            <span class="mr-2">⚠</span>
-            <span>${errorMessage}</span>
-            <span class="ml-4 cursor-pointer" onclick="this.parentElement.parentElement.remove()">×</span>
-        </div>
-    `;
+                   <div class="flex">
+                       <span class="mr-2">⚠</span>
+                       <span>${errorMessage}</span>
+                       <span class="ml-4 cursor-pointer" onclick="this.parentElement.parentElement.remove()">×</span>
+                   </div>
+               `;
                 document.body.appendChild(errorDiv);
                 setTimeout(() => errorDiv.remove(), 5000);
             @endif
