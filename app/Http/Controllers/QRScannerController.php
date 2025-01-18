@@ -8,10 +8,7 @@ use Illuminate\Support\Facades\Gate;
 
 class QRScannerController extends Controller
 {
-    public function __construct()
-    {
-        $this->authorizeResource(IdentitasRumah::class, 'identitas_rumah');
-    }
+
 
     public function index()
     {

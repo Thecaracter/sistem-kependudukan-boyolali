@@ -150,8 +150,8 @@
                     </svg>
                     <span class="font-medium">Verifikasi Penduduk</span>
                 </a>
-            @endcan\
-            <!-- QR Scanner Menu - Add this after Kartu Keluarga and before Verifikasi Penduduk -->
+            @endcan
+           
             @can('scan-qr')
                 <a href="{{ route('qr-scanner.index') }}"
                     class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all group 
