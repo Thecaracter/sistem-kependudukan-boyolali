@@ -166,7 +166,7 @@ class KartuKeluargaController extends Controller
     public function export()
     {
         try {
-            $this->authorize('view-kartu-keluarga');
+            $this->authorize('create-reports');
 
             return Excel::download(new KartuKeluargaExport, 'data-kartu-keluarga-' . date('Y-m-d') . '.xlsx');
         } catch (Exception $e) {

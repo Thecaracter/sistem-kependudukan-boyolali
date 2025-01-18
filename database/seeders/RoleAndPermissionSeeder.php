@@ -57,7 +57,6 @@ class RoleAndPermissionSeeder extends Seeder
 
 
             // Laporan
-            'view-reports',
             'create-reports',
             'export-data'
         ];
@@ -95,7 +94,7 @@ class RoleAndPermissionSeeder extends Seeder
                     'download-qr-code',
                     'scan-qr',
 
-                    'view-reports',
+                    'create-reports',
                     'export-data'
                 ],
                 'users' => [
@@ -123,7 +122,6 @@ class RoleAndPermissionSeeder extends Seeder
                     'download-qr-code',
                     'scan-qr',
 
-                    'view-reports',
                     'create-reports',
                     'export-data'
                 ],
@@ -147,7 +145,7 @@ class RoleAndPermissionSeeder extends Seeder
                     'verify-documents',
                     'view-verifications',
                     'scan-qr',
-                    'view-reports'
+                    'create-reports',
                 ],
                 'users' => [
                     [
@@ -168,7 +166,7 @@ class RoleAndPermissionSeeder extends Seeder
                     'download-qr-code',
                     'scan-qr',
 
-                    'view-reports',
+                    'create-reports',
                     'view-verifications'
                 ],
                 'users' => [
@@ -190,7 +188,7 @@ class RoleAndPermissionSeeder extends Seeder
                     'download-qr-code',
                     'scan-qr',
 
-                    'view-reports',
+                    'create-reports',
                     'view-verifications'
                 ],
                 'users' => [

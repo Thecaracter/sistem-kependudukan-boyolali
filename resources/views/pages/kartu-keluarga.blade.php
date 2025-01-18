@@ -122,6 +122,7 @@
                         <!-- Actions Container -->
                         <div class="flex flex-col sm:flex-row w-full lg:w-auto gap-4">
                             <!-- Export Button -->
+                            @can('create-reports')
                             <a href="{{ route('kartu-keluarga.export') }}" 
                                class="inline-flex items-center justify-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors duration-200">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -130,6 +131,7 @@
                                 </svg>
                                 Export Excel
                             </a>
+                            @endcan
             
                             <!-- Search Form -->
                             <form method="GET" action="{{ route('kartu-keluarga.index') }}" class="flex-1 sm:flex-none">
