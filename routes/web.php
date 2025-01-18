@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PendudukController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
@@ -93,5 +94,11 @@ Route::middleware('auth')->group(function () {
     Route::controller(QRScannerController::class)->group(function () {
         Route::get('/scan-qr', 'index')->name('qr-scanner.index');
         Route::post('/scan-qr', 'scan')->name('qr-scanner.scan');
+    });
+
+    Route::controller(ProfileController::class)->group(function () {
+        Route::get('/profile', 'edit')->name('profile.edit');
+        Route::patch('/profile', 'update')->name('profile.update');
+        Route::patch('/profile/password', 'updatePassword')->name('profile.update-password');
     });
 });

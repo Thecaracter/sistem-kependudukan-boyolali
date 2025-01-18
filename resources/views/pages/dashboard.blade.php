@@ -550,151 +550,134 @@
         }
     });
 
-    // Verifikasi Chart
-    const verifikasiData = {!! json_encode($verifikasiStats) !!};
-    new Chart(document.getElementById('verifikasiChart').getContext('2d'), {
-        type: 'doughnut',
-        data: {
-            labels: Object.keys(verifikasiData).map(status => status.charAt(0).toUpperCase() + status.slice(1)),
-            datasets: [{
-                data: Object.values(verifikasiData),
-                backgroundColor: ['#22C55E', '#EAB308', '#EF4444'],
-                borderWidth: 0
+   // Trend Verifikasi Chart
+const verifikasiTrend = {!! json_encode($verifikasiTrend) !!};
+const verifikasiTrendLabels = Object.keys(verifikasiTrend);
+const statusTypes = ['pending', 'verified', 'rejected'];
+const statusColors = {
+    pending: '#EAB308',  // Yellow
+    verified: '#22C55E', // Green
+    rejected: '#EF4444'  // Red
+};
+
+new Chart(document.getElementById('verifikasiTrendChart').getContext('2d'), {
+    type: 'line',
+    data: {
+        labels: verifikasiTrendLabels.map(date => {
+            const [year, month] = date.split('-');
+            return new Date(year, month - 1).toLocaleDateString('id-ID', { month: 'short', year: 'numeric' });
+        }),
+        datasets: statusTypes.map(status => ({
+            label: status.charAt(0).toUpperCase() + status.slice(1),
+            data: verifikasiTrendLabels.map(month => {
+                const monthData = verifikasiTrend[month] || [];
+                return monthData.filter(item => item.status === status).length;
+            }),
+            borderColor: statusColors[status],
+            backgroundColor: 'transparent',
+            borderWidth: 2,
+            pointRadius: 4,
+            pointBackgroundColor: '#FFFFFF',
+            pointBorderColor: statusColors[status],
+            pointHoverRadius: 6
+        }))
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            xAxes: [{
+                gridLines: { display: false }
+            }],
+            yAxes: [{
+                ticks: { beginAtZero: true },
+                gridLines: {
+                    color: '#EDF2F7',
+                    drawBorder: false
+                }
             }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            cutoutPercentage: 75,
-            legend: {
-                position: 'bottom',
-                labels: {
-                    padding: 20,
-                    boxWidth: 12,
-                    usePointStyle: true
-                }
-            },
-            tooltips: {
-                callbacks: {
-                    label: function(tooltipItem, data) {
-                        const value = data.datasets[0].data[tooltipItem.index];
-                        const total = data.datasets[0].data.reduce((a, b) => a + b);
-                        const percentage = Math.round((value / total) * 100);
-                        return `${value.toLocaleString()} KK (${percentage}%)`;
-                    }
-                }
-            }
         }
-    });
+    }
+});
 
-    // Rumah Stats Chart
-    const rumahStats = {
-        tipeLantai: {!! json_encode($rumahStats['tipe_lantai']) !!},
-        atap: {!! json_encode($rumahStats['atap']) !!}
-    };
+// Tipe Lantai dan Atap Chart
+const rumahStats = {!! json_encode($rumahStats) !!};
+const rumahCtx = document.getElementById('rumahChart').getContext('2d');
 
-    new Chart(document.getElementById('rumahChart').getContext('2d'), {
-        type: 'radar',
-        data: {
-            labels: [...Object.keys(rumahStats.tipeLantai), ...Object.keys(rumahStats.atap)].map(label => 
-                label.charAt(0).toUpperCase() + label.slice(1)
-            ),
-            datasets: [{
-                label: 'Jumlah Rumah',
-                data: [...Object.values(rumahStats.tipeLantai), ...Object.values(rumahStats.atap)],
-                backgroundColor: 'rgba(99, 102, 241, 0.2)',
-                borderColor: '#6366F1',
-                pointBackgroundColor: '#6366F1',
-                pointBorderColor: '#fff',
-                pointHoverBackgroundColor: '#fff',
-                pointHoverBorderColor: '#6366F1'
+new Chart(rumahCtx, {
+    type: 'bar',
+    data: {
+        labels: [
+            ...Object.keys(rumahStats.tipe_lantai || {}),
+            ...Object.keys(rumahStats.atap || {})
+        ].map(label => label.replace('_', ' ').toUpperCase()),
+        datasets: [{
+            label: 'Tipe Lantai',
+            data: Object.values(rumahStats.tipe_lantai || {}),
+            backgroundColor: '#60A5FA',
+            barPercentage: 0.5
+        }, {
+            label: 'Atap',
+            data: Object.values(rumahStats.atap || {}),
+            backgroundColor: '#F472B6',
+            barPercentage: 0.5
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        legend: { position: 'top' },
+        scales: {
+            yAxes: [{
+                ticks: { beginAtZero: true }
             }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scale: {
-                ticks: {
+        }
+    }
+});
+
+// Distribusi Kamar Chart
+const kamarStats = {!! json_encode($rumahStats['distribusi_kamar'] ?? []) !!};
+
+new Chart(document.getElementById('kamarChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+        labels: Object.keys(kamarStats?.kamar_tidur || {}).map(num => `${num} Kamar`),
+        datasets: [{
+            label: 'Kamar Tidur',
+            data: Object.values(kamarStats?.kamar_tidur || {}),
+            backgroundColor: '#60A5FA',
+            barPercentage: 0.5
+        }, {
+            label: 'Kamar Mandi',
+            data: Object.values(kamarStats?.kamar_mandi || {}),
+            backgroundColor: '#F472B6',
+            barPercentage: 0.5
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        legend: { position: 'top' },
+        scales: {
+            yAxes: [{
+                ticks: { 
                     beginAtZero: true,
                     callback: function(value) {
-                        return value.toLocaleString();
+                        return value + ' Rumah';
                     }
                 }
-            },
-            tooltips: {
-                callbacks: {
-                    label: function(tooltipItem, data) {
-                        return `${tooltipItem.value.toLocaleString()} rumah`;
-                    }
-                }
-            }
-        }
-    });
-
-    // Distribusi Kamar Chart
-    const kamarData = {
-        kamarTidur: {!! json_encode($rumahStats['distribusi_kamar']['kamar_tidur']) !!},
-        kamarMandi: {!! json_encode($rumahStats['distribusi_kamar']['kamar_mandi']) !!}
-    };
-
-    new Chart(document.getElementById('kamarChart').getContext('2d'), {
-        type: 'bar',
-        data: {
-            labels: Object.keys(kamarData.kamarTidur).map(num => `${num} Kamar`),
-            datasets: [
-                {
-                    label: 'Kamar Tidur',
-                    data: Object.values(kamarData.kamarTidur),
-                    backgroundColor: '#60A5FA',
-                    borderWidth: 0,
-                    barPercentage: 0.6
-                },
-                {
-                    label: 'Kamar Mandi',
-                    data: Object.values(kamarData.kamarMandi),
-                    backgroundColor: '#F472B6',
-                    borderWidth: 0,
-                    barPercentage: 0.6
-                }
-            ]
+            }]
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                xAxes: [{
-                    stacked: false,
-                    gridLines: {
-                        display: false
-                    }
-                }],
-                yAxes: [{
-                    stacked: false,
-                    ticks: {
-                        beginAtZero: true,
-                        callback: function(value) {
-                            return value.toLocaleString() + ' Rumah';
-                        }
-                    },
-                    gridLines: {
-                        color: '#EDF2F7',
-                        zeroLineColor: '#EDF2F7',
-                        drawBorder: false
-                    }
-                }]
-            },
-            tooltips: {
-                callbacks: {
-                    label: function(tooltipItem, data) {
-                        const dataset = data.datasets[tooltipItem.datasetIndex];
-                        const value = dataset.data[tooltipItem.index];
-                        const total = data.datasets[0].data.reduce((a, b) => a + b);
-                        const percentage = Math.round((value / total) * 100);
-                        return `${dataset.label}: ${value.toLocaleString()} rumah (${percentage}%)`;
-                    }
+        tooltips: {
+            callbacks: {
+                label: function(tooltipItem, data) {
+                    const label = data.datasets[tooltipItem.datasetIndex].label;
+                    const value = tooltipItem.value;
+                    return `${label}: ${value} Rumah`;
                 }
             }
         }
-    });
+    }
+});
 </script>
 @endpush
