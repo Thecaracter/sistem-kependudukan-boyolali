@@ -60,6 +60,7 @@
 
 @section('content')
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        
         <!-- Status Filter Cards -->
         <div class="mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
             <a href="{{ route('kartu-keluarga.index') }}"
@@ -111,45 +112,67 @@
         </div>
 
         <div class="bg-white rounded-xl shadow-sm">
-            <div class="p-4 sm:p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-                <h1 class="text-xl sm:text-2xl font-semibold text-gray-900">Data Kartu Keluarga</h1>
-                <div class="w-full sm:w-auto flex flex-col sm:flex-row gap-4">
-                    <!-- Search Form -->
-                    <form method="GET" action="{{ route('kartu-keluarga.index') }}" class="w-full sm:w-auto">
-                        <div class="flex gap-2">
-                            <div class="relative flex-1">
-                                <input type="text" name="search" value="{{ $search ?? '' }}"
-                                    class="w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                                    placeholder="Cari no. KK/nama/NIK...">
-                                @if ($search)
-                                    <a href="{{ route('kartu-keluarga.index') }}"
-                                        class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+            <div class="w-full bg-white shadow-sm rounded-lg">
+                <div class="p-6">
+                    <!-- Header Container -->
+                    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center space-y-4 lg:space-y-0">
+                        <!-- Title -->
+                        <h1 class="text-2xl font-semibold text-gray-900">Data Kartu Keluarga</h1>
+                        
+                        <!-- Actions Container -->
+                        <div class="flex flex-col sm:flex-row w-full lg:w-auto gap-4">
+                            <!-- Export Button -->
+                            <a href="{{ route('kartu-keluarga.export') }}" 
+                               class="inline-flex items-center justify-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors duration-200">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                </svg>
+                                Export Excel
+                            </a>
+            
+                            <!-- Search Form -->
+                            <form method="GET" action="{{ route('kartu-keluarga.index') }}" class="flex-1 sm:flex-none">
+                                <div class="flex gap-2">
+                                    <div class="relative flex-1">
+                                        <input type="text" 
+                                               name="search" 
+                                               value="{{ $search ?? '' }}"
+                                               class="w-full rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 pl-4 pr-10 py-2"
+                                               placeholder="Cari no. KK/nama/NIK...">
+                                        @if ($search)
+                                            <a href="{{ route('kartu-keluarga.index') }}"
+                                               class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                          d="M6 18L18 6M6 6l12 12"/>
+                                                </svg>
+                                            </a>
+                                        @endif
+                                    </div>
+                                    <button type="submit"
+                                            class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M6 18L18 6M6 6l12 12" />
+                                                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                                         </svg>
-                                    </a>
-                                @endif
-                            </div>
-                            <button type="submit"
-                                class="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                            </button>
+                                    </button>
+                                </div>
+                            </form>
+            
+                            <!-- Add KK Button -->
+                            @can('create-kartu-keluarga')
+                                <button onclick="createModal.showModal()"
+                                        class="inline-flex items-center justify-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                              d="M12 4v16m8-8H4"/>
+                                    </svg>
+                                    Tambah KK
+                                </button>
+                            @endcan
                         </div>
-                    </form>
-
-                    @can('create-kartu-keluarga')
-                        <button onclick="createModal.showModal()"
-                            class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                            </svg>
-                            Tambah KK
-                        </button>
-                    @endcan
+                    </div>
                 </div>
             </div>
 

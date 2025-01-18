@@ -5,6 +5,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PendudukController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\QRScannerController;
 use App\Http\Controllers\VerifikasiController;
 use App\Http\Controllers\KartuKeluargaController;
@@ -29,9 +30,7 @@ Route::controller(AuthController::class)->group(function () {
 // Protected Routes
 Route::middleware('auth')->group(function () {
     // Dashboard
-    Route::get('/dashboard', function () {
-        return view('pages.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // User Management Routes
     Route::controller(UserController::class)->group(function () {
@@ -52,6 +51,7 @@ Route::middleware('auth')->group(function () {
     // Identitas Rumah Routes
     Route::controller(IdentitasRumahController::class)->group(function () {
         Route::get('identitas-rumah', 'index')->name('identitas-rumah.index');
+        Route::get('identitas-rumah/export', 'export')->name('identitas-rumah.export');
         Route::post('identitas-rumah', 'store')->name('identitas-rumah.store');
         Route::put('identitas-rumah/{identitasRumah}', 'update')->name('identitas-rumah.update');
         Route::delete('identitas-rumah/{identitasRumah}', 'destroy')->name('identitas-rumah.destroy');
@@ -63,6 +63,7 @@ Route::middleware('auth')->group(function () {
         // KK Routes
         Route::controller(KartuKeluargaController::class)->group(function () {
             Route::get('/', 'index')->name('kartu-keluarga.index');
+            Route::get('/export', 'export')->name('kartu-keluarga.export');
             Route::post('/', 'store')->name('kartu-keluarga.store');
             Route::put('/{kartuKeluarga}', 'update')->name('kartu-keluarga.update');
             Route::delete('/{kartuKeluarga}', 'destroy')->name('kartu-keluarga.destroy');
@@ -71,19 +72,26 @@ Route::middleware('auth')->group(function () {
         // Anggota/Penduduk Routes (Nested)
         Route::controller(PendudukController::class)->group(function () {
             Route::get('/{id_kk}/anggota', 'index')->name('penduduk.index');
+            Route::get('/{id_kk}/anggota/export', 'export')->name('penduduk.export');
             Route::post('/{id_kk}/anggota', 'store')->name('penduduk.store');
             Route::put('/{id_kk}/anggota/{penduduk}', 'update')->name('penduduk.update');
             Route::delete('/{id_kk}/anggota/{penduduk}', 'destroy')->name('penduduk.destroy');
         });
     });
+
+    // Verifikasi Routes
     Route::prefix('verifikasi')->group(function () {
         Route::controller(VerifikasiController::class)->group(function () {
             Route::get('/', 'index')->name('verifikasi.index');
+            Route::get('/export', 'export')->name('verifikasi.export');
             Route::put('/{id_penduduk}/approve', 'approve')->name('verifikasi.approve');
             Route::put('/{id_penduduk}/reject', 'reject')->name('verifikasi.reject');
         });
     });
 
-    Route::get('/scan-qr', [QRScannerController::class, 'index'])->name('qr-scanner.index');
-    Route::post('/scan-qr', [QRScannerController::class, 'scan'])->name('qr-scanner.scan');
+    // QR Scanner Routes
+    Route::controller(QRScannerController::class)->group(function () {
+        Route::get('/scan-qr', 'index')->name('qr-scanner.index');
+        Route::post('/scan-qr', 'scan')->name('qr-scanner.scan');
+    });
 });

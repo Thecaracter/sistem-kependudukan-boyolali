@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\KartuKeluarga;
 use App\Models\VerifikasiPenduduk;
 use Illuminate\Support\Facades\DB;
+use App\Exports\KartuKeluargaExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class KartuKeluargaController extends Controller
 {
@@ -159,6 +161,17 @@ class KartuKeluargaController extends Controller
 
             return redirect()->back()
                 ->with('error', 'Terjadi kesalahan saat menghapus data: ' . $e->getMessage());
+        }
+    }
+    public function export()
+    {
+        try {
+            $this->authorize('view-kartu-keluarga');
+
+            return Excel::download(new KartuKeluargaExport, 'data-kartu-keluarga-' . date('Y-m-d') . '.xlsx');
+        } catch (Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan saat mengekspor data: ' . $e->getMessage());
         }
     }
 }
