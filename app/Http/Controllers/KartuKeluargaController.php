@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use App\Models\Desa;
 use Illuminate\Http\Request;
 use App\Models\KartuKeluarga;
+use Illuminate\Validation\Rule;
 use App\Models\VerifikasiPenduduk;
 use Illuminate\Support\Facades\DB;
 use App\Exports\KartuKeluargaExport;
@@ -20,40 +22,47 @@ class KartuKeluargaController extends Controller
             $search = $request->search;
             $status = $request->status;
 
-            $kartuKeluarga = KartuKeluarga::with(['kepalaKeluarga', 'identitasRumah', 'verifikasi'])
-                ->when($search, function ($query) use ($search) {
-                    $query->where('nomor_kk', 'like', "%{$search}%")
-                        ->orWhereHas('kepalaKeluarga', function ($q) use ($search) {
-                            $q->where('nama', 'like', "%{$search}%")
-                                ->orWhere('nik', 'like', "%{$search}%");
-                        })
-                        ->orWhereHas('anggotaKeluarga', function ($q) use ($search) {
-                            $q->where('nama', 'like', "%{$search}%")
-                                ->orWhere('nik', 'like', "%{$search}%");
-                        });
-                })
-                ->when($status, function ($query) use ($status) {
-                    $query->whereHas('verifikasi', function ($q) use ($status) {
-                        $q->where('status', $status);
+            // Query dasar
+            $query = KartuKeluarga::with(['kepalaKeluarga', 'identitasRumah', 'verifikasi']);
+
+            // Filter berdasarkan desa yang login
+            if (auth()->user()->id_desa) {
+                $query->where('id_desa', auth()->user()->id_desa);
+            }
+
+            // Filter pencarian
+            $query->when($search, function ($query) use ($search) {
+                $query->where('nomor_kk', 'like', "%{$search}%")
+                    ->orWhereHas('kepalaKeluarga', function ($q) use ($search) {
+                        $q->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nik', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('anggotaKeluarga', function ($q) use ($search) {
+                        $q->where('nama', 'like', "%{$search}%")
+                            ->orWhere('nik', 'like', "%{$search}%");
                     });
-                })
-                ->latest()
-                ->get();
+            });
+
+            // Filter status
+            $query->when($status, function ($query) use ($status) {
+                $query->whereHas('verifikasi', function ($q) use ($status) {
+                    $q->where('status', $status);
+                });
+            });
+
+            $kartuKeluarga = $query->latest()->get();
 
             $statusCount = [
                 'total' => $kartuKeluarga->count(),
-                'pending' => $kartuKeluarga->filter(function ($item) {
-                    return $item->verifikasi->status === 'pending';
-                })->count(),
-                'verified' => $kartuKeluarga->filter(function ($item) {
-                    return $item->verifikasi->status === 'verified';
-                })->count(),
-                'rejected' => $kartuKeluarga->filter(function ($item) {
-                    return $item->verifikasi->status === 'rejected';
-                })->count(),
+                'pending' => $kartuKeluarga->filter(fn($item) => $item->verifikasi->status === 'pending')->count(),
+                'verified' => $kartuKeluarga->filter(fn($item) => $item->verifikasi->status === 'verified')->count(),
+                'rejected' => $kartuKeluarga->filter(fn($item) => $item->verifikasi->status === 'rejected')->count(),
             ];
 
-            return view('pages.kartu-keluarga', compact('kartuKeluarga', 'search', 'status', 'statusCount'));
+            // Tambahkan data desa untuk admin
+            $desas = auth()->user()->hasRole('Admin') ? Desa::all() : collect();
+
+            return view('pages.kartu-keluarga', compact('kartuKeluarga', 'search', 'status', 'statusCount', 'desas'));
         } catch (Exception $e) {
             return redirect()->back()
                 ->with('error', 'Terjadi kesalahan saat memuat data: ' . $e->getMessage());
@@ -68,17 +77,23 @@ class KartuKeluargaController extends Controller
             $validated = $request->validate([
                 'nomor_kk' => ['required', 'string', 'size:16', 'unique:kartu_keluarga,nomor_kk'],
                 'tanggal_pembuatan' => ['required', 'date', 'before_or_equal:today'],
+                'id_desa' => [
+                    Rule::requiredIf(fn() => auth()->user()->hasRole('Admin')),
+                    'exists:desa,id'
+                ],
             ]);
 
             DB::beginTransaction();
 
-            // Create Kartu Keluarga
+            // Gunakan id_desa dari request jika admin, atau dari user jika bukan admin
+            $id_desa = auth()->user()->hasRole('Admin') ? $validated['id_desa'] : auth()->user()->id_desa;
+
             $kartuKeluarga = KartuKeluarga::create([
                 'nomor_kk' => $validated['nomor_kk'],
                 'tanggal_pembuatan' => $validated['tanggal_pembuatan'],
+                'id_desa' => $id_desa,
             ]);
 
-            // Create Verifikasi Penduduk
             VerifikasiPenduduk::create([
                 'id_kk' => $kartuKeluarga->id_kk,
                 'status' => 'pending',

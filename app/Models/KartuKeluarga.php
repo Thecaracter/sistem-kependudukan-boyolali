@@ -19,7 +19,8 @@ class KartuKeluarga extends Model
         'nomor_kk',
         'kepala_keluarga_id',
         'tanggal_pembuatan',
-        'id_rumah'
+        'id_rumah',
+        'id_desa'
     ];
 
     protected $casts = [
@@ -48,5 +49,11 @@ class KartuKeluarga extends Model
     public function verifikasi(): HasOne
     {
         return $this->hasOne(VerifikasiPenduduk::class, 'id_kk', 'id_kk');
+    }
+
+    // Relationship dengan Desa
+    public function desa(): BelongsTo
+    {
+        return $this->belongsTo(Desa::class, 'id_desa', 'id');
     }
 }

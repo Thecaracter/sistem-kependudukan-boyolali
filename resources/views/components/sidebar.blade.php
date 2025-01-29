@@ -63,47 +63,55 @@
             </a>
 
             <!-- User Management -->
-            @canany(['view-users', 'view-roles'])
-                <div x-data="{ open: {{ request()->routeIs('users.*') || request()->routeIs('roles.*') ? 'true' : 'false' }} }" class="relative">
-                    <button @click="open = !open"
-                        class="flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-medium 
-                    transition-all text-primary-100 hover:bg-primary-800/40 hover:text-white group
-                    {{ request()->routeIs('users.*') || request()->routeIs('roles.*') ? 'bg-primary-800/50' : '' }}">
-                        <div class="flex items-center gap-3">
-                            <svg class="h-5 w-5 transition-transform group-hover:scale-110" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                            </svg>
-                            <span class="font-medium">Manajemen User</span>
-                        </div>
-                        <svg :class="{ 'rotate-90': open }" class="h-5 w-5 transform transition-transform duration-200"
-                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        </svg>
-                    </button>
+            @canany(['view-users', 'view-roles', 'view-desa'])
+    <div x-data="{ open: {{ request()->routeIs('users.*') || request()->routeIs('roles.*') || request()->routeIs('desa.*') ? 'true' : 'false' }} }" class="relative">
+        <button @click="open = !open"
+            class="flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-medium 
+            transition-all text-primary-100 hover:bg-primary-800/40 hover:text-white group
+            {{ request()->routeIs('users.*') || request()->routeIs('roles.*') || request()->routeIs('desa.*') ? 'bg-primary-800/50' : '' }}">
+            <div class="flex items-center gap-3">
+                <svg class="h-5 w-5 transition-transform group-hover:scale-110" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                <span class="font-medium">Manajemen User</span>
+            </div>
+            <svg :class="{ 'rotate-90': open }" class="h-5 w-5 transform transition-transform duration-200"
+                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+        </button>
 
-                    <div x-show="open" x-transition:enter="transition ease-out duration-200"
-                        x-transition:enter-start="opacity-0 -translate-y-2"
-                        x-transition:enter-end="opacity-100 translate-y-0" class="mt-1.5 space-y-1 px-3">
-                        @can('view-users')
-                            <a href="{{ route('users.index') }}"
-                                class="block rounded-lg px-4 py-2.5 text-sm text-primary-100 hover:bg-primary-800/40 hover:text-white
-                            transition-all hover:pl-5 font-medium {{ request()->routeIs('users.*') ? 'bg-primary-800/40 text-white' : '' }}">
-                                Data User
-                            </a>
-                        @endcan
+        <div x-show="open" x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 -translate-y-2"
+            x-transition:enter-end="opacity-100 translate-y-0" class="mt-1.5 space-y-1 px-3">
+            @can('view-users')
+                <a href="{{ route('users.index') }}"
+                    class="block rounded-lg px-4 py-2.5 text-sm text-primary-100 hover:bg-primary-800/40 hover:text-white
+                transition-all hover:pl-5 font-medium {{ request()->routeIs('users.*') ? 'bg-primary-800/40 text-white' : '' }}">
+                    Data User
+                </a>
+            @endcan
 
-                        @can('view-roles')
-                            <a href="{{ route('roles.index') }}"
-                                class="block rounded-lg px-4 py-2.5 text-sm text-primary-100 hover:bg-primary-800/40 hover:text-white
-                            transition-all hover:pl-5 font-medium {{ request()->routeIs('roles.*') ? 'bg-primary-800/40 text-white' : '' }}">
-                                Data Role
-                            </a>
-                        @endcan
-                    </div>
-                </div>
-            @endcanany
+            @can('view-roles')
+                <a href="{{ route('roles.index') }}"
+                    class="block rounded-lg px-4 py-2.5 text-sm text-primary-100 hover:bg-primary-800/40 hover:text-white
+                transition-all hover:pl-5 font-medium {{ request()->routeIs('roles.*') ? 'bg-primary-800/40 text-white' : '' }}">
+                    Data Role
+                </a>
+            @endcan
+
+            @can('view-desa')
+                <a href="{{ route('desa.index') }}"
+                    class="block rounded-lg px-4 py-2.5 text-sm text-primary-100 hover:bg-primary-800/40 hover:text-white
+                transition-all hover:pl-5 font-medium {{ request()->routeIs('desa.*') ? 'bg-primary-800/40 text-white' : '' }}">
+                    Data Desa
+                </a>
+            @endcan
+        </div>
+    </div>
+@endcanany
 
             <!-- Kartu Keluarga -->
             @can('view-kartu-keluarga')

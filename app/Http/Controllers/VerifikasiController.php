@@ -14,10 +14,18 @@ class VerifikasiController extends Controller
         try {
             $this->authorize('verify-documents');
 
-            $verifikasi = VerifikasiPenduduk::where('status', 'pending')
+            $query = VerifikasiPenduduk::where('status', 'pending')
                 ->with(['kartuKeluarga.anggotaKeluarga', 'kartuKeluarga.identitasRumah', 'kartuKeluarga.kepalaKeluarga'])
-                ->latest()
-                ->paginate(10);
+                ->latest();
+
+            // Filter berdasarkan desa jika bukan admin
+            if (auth()->user()->id_desa) {
+                $query->whereHas('kartuKeluarga', function ($q) {
+                    $q->where('id_desa', auth()->user()->id_desa);
+                });
+            }
+
+            $verifikasi = $query->paginate(10);
 
             return view('pages.verifikasi', compact('verifikasi'));
 

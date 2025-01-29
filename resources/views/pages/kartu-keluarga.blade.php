@@ -76,8 +76,7 @@
                 <div class="flex items-center justify-between">
                     <p class="text-sm font-medium text-gray-600">Menunggu Verifikasi</p>
                     <span class="inline-flex items-center gap-1">
-                        <span
-                            class="text-lg font-semibold {{ request('status') === 'pending' ? 'text-yellow-600' : 'text-gray-900' }}">
+                        <span class="text-lg font-semibold {{ request('status') === 'pending' ? 'text-yellow-600' : 'text-gray-900' }}">
                             {{ $statusCount['pending'] }}
                         </span>
                     </span>
@@ -89,8 +88,7 @@
                 <div class="flex items-center justify-between">
                     <p class="text-sm font-medium text-gray-600">Terverifikasi</p>
                     <span class="inline-flex items-center gap-1">
-                        <span
-                            class="text-lg font-semibold {{ request('status') === 'verified' ? 'text-green-600' : 'text-gray-900' }}">
+                        <span class="text-lg font-semibold {{ request('status') === 'verified' ? 'text-green-600' : 'text-gray-900' }}">
                             {{ $statusCount['verified'] }}
                         </span>
                     </span>
@@ -102,8 +100,7 @@
                 <div class="flex items-center justify-between">
                     <p class="text-sm font-medium text-gray-600">Ditolak</p>
                     <span class="inline-flex items-center gap-1">
-                        <span
-                            class="text-lg font-semibold {{ request('status') === 'rejected' ? 'text-red-600' : 'text-gray-900' }}">
+                        <span class="text-lg font-semibold {{ request('status') === 'rejected' ? 'text-red-600' : 'text-gray-900' }}">
                             {{ $statusCount['rejected'] }}
                         </span>
                     </span>
@@ -184,28 +181,22 @@
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th
-                                        class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Nomor KK
                                     </th>
-                                    <th
-                                        class="hidden sm:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th class="hidden sm:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Kepala Keluarga
                                     </th>
-                                    <th
-                                        class="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th class="hidden lg:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Tanggal Pembuatan
                                     </th>
-                                    <th
-                                        class="hidden xl:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th class="hidden xl:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Alamat
                                     </th>
-                                    <th
-                                        class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Status
                                     </th>
-                                    <th
-                                        class="px-3 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th class="px-3 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Aksi
                                     </th>
                                 </tr>
@@ -237,28 +228,6 @@
                                                             {{ $item->identitasRumah->alamat_rumah }}
                                                         </div>
                                                     @endif
-
-                                                    @can('view-identitas-rumah')
-                                                        <a href="{{ route('identitas-rumah.index', ['kk' => $item->id_kk]) }}"
-                                                            class="mt-0.5 text-primary-600 hover:text-primary-700 hover:underline inline-flex items-center gap-1">
-                                                            @if ($item->identitasRumah)
-                                                                <span>Edit Alamat</span>
-                                                                <svg class="w-3 h-3" fill="none" stroke="currentColor"
-                                                                    viewBox="0 0 24 24">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                                        stroke-width="2"
-                                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                                                </svg>
-                                                            @else
-                                                                <span>Tambah Alamat</span>
-                                                                <svg class="w-3 h-3" fill="none" stroke="currentColor"
-                                                                    viewBox="0 0 24 24">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                                        stroke-width="2" d="M12 4v16m8-8H4" />
-                                                                </svg>
-                                                            @endif
-                                                        </a>
-                                                    @endcan
                                                 </div>
                                             </div>
                                         </td>
@@ -291,7 +260,7 @@
                                                         <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                             viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round"
-                                                                stroke-width="2" d="M12 4v16m8-8H4" />
+                                                            stroke-width="2" d="M12 4v16m8-8H4" />
                                                         </svg>
                                                     @endif
                                                 </a>
@@ -307,24 +276,24 @@
                                                         'text' => 'text-yellow-800',
                                                         'border' => 'border-yellow-200',
                                                         'icon' => '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                    </svg>',
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                        </svg>',
                                                     ],
                                                     'verified' => [
                                                         'bg' => 'bg-green-100',
                                                         'text' => 'text-green-800',
                                                         'border' => 'border-green-200',
                                                         'icon' => '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                    </svg>',
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                        </svg>',
                                                     ],
                                                     'rejected' => [
                                                         'bg' => 'bg-red-100',
                                                         'text' => 'text-red-800',
                                                         'border' => 'border-red-200',
                                                         'icon' => '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                    </svg>',
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                        </svg>',
                                                     ],
                                                 ][$status];
                                             @endphp
@@ -332,9 +301,8 @@
                                             <div class="flex flex-col gap-1">
                                                 <!-- Status Badge -->
                                                 <div class="flex items-center gap-2">
-                                                    <div
-                                                        class="flex items-center px-2.5 py-1.5 rounded-full border gap-1.5
-                                                    {{ $statusInfo['bg'] }} {{ $statusInfo['text'] }} {{ $statusInfo['border'] }}">
+                                                    <div class="flex items-center px-2.5 py-1.5 rounded-full border gap-1.5
+                                                        {{ $statusInfo['bg'] }} {{ $statusInfo['text'] }} {{ $statusInfo['border'] }}">
                                                         {!! $statusInfo['icon'] !!}
                                                         <span class="text-sm font-medium">{{ ucfirst($status) }}</span>
                                                     </div>
@@ -438,6 +406,19 @@
                         <input type="date" name="tanggal_pembuatan" required max="{{ date('Y-m-d') }}"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500">
                     </div>
+
+                    @role('Admin')
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Desa</label>
+                        <select name="id_desa" required
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500">
+                            <option value="">Pilih Desa</option>
+                            @foreach($desas as $desa)
+                                <option value="{{ $desa->id }}">{{ $desa->nama_desa }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endrole
                 </div>
 
                 <div class="mt-6 flex justify-end gap-3">
@@ -482,126 +463,146 @@
                             max="{{ date('Y-m-d') }}"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500">
                     </div>
+
+                    @role('Admin')
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Desa</label>
+                        <select name="id_desa" id="edit_id_desa" required
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500">
+                            <option value="">Pilih Desa</option>
+                            @foreach($desas as $desa)
+                                <option value="{{ $desa->id }}">{{ $desa->nama_desa }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endrole
                 </div>
 
                 <div class="mt-6 flex justify-end gap-3">
                     <button type="button" onclick="editModal.close()"
-                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                        Batal
-                    </button>
-                    <button type="submit"
-                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
-                        Update
-                    </button>
-                </div>
-            </form>
-        </div>
-    </dialog>
-
-    <!-- Delete Modal -->
-    <dialog id="deleteModal">
-        <div class="modal-box">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-bold">Konfirmasi Hapus</h3>
-                <button type="button" onclick="deleteModal.close()" class="text-gray-400 hover:text-gray-500">
-                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                    Batal
+                </button>
+                <button type="submit"
+                    class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                    Update
                 </button>
             </div>
-            <p class="text-gray-600 mb-4">Apakah Anda yakin ingin menghapus kartu keluarga ini? Tindakan ini tidak dapat
-                dibatalkan.</p>
-            <form id="deleteForm" method="POST">
-                @csrf
-                @method('DELETE')
-                <div class="flex justify-end gap-3">
-                    <button type="button" onclick="deleteModal.close()"
-                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                        Batal
-                    </button>
-                    <button type="submit"
-                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                        Hapus
-                    </button>
-                </div>
-            </form>
+        </form>
+    </div>
+</dialog>
+
+<!-- Delete Modal -->
+<dialog id="deleteModal">
+    <div class="modal-box">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-bold">Konfirmasi Hapus</h3>
+            <button type="button" onclick="deleteModal.close()" class="text-gray-400 hover:text-gray-500">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
         </div>
-    </dialog>
+        <p class="text-gray-600 mb-4">Apakah Anda yakin ingin menghapus kartu keluarga ini? Tindakan ini tidak dapat
+            dibatalkan.</p>
+        <form id="deleteForm" method="POST">
+            @csrf
+            @method('DELETE')
+            <div class="flex justify-end gap-3">
+                <button type="button" onclick="deleteModal.close()"
+                    class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                    Batal
+                </button>
+                <button type="submit"
+                    class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                    Hapus
+                </button>
+            </div>
+        </form>
+    </div>
+</dialog>
 
-    @push('scripts')
-        <script>
-            // Get all modals
-            const createModal = document.getElementById('createModal');
-            const editModal = document.getElementById('editModal');
-            const deleteModal = document.getElementById('deleteModal');
+@push('scripts')
+    <script>
+        // Get all modals
+        const createModal = document.getElementById('createModal');
+        const editModal = document.getElementById('editModal');
+        const deleteModal = document.getElementById('deleteModal');
 
-            function editKK(kartuKeluarga) {
-                document.getElementById('editForm').action = `/kartu-keluarga/${kartuKeluarga.id_kk}`;
-                document.getElementById('edit_nomor_kk').value = kartuKeluarga.nomor_kk;
-                document.getElementById('edit_tanggal_pembuatan').value = kartuKeluarga.tanggal_pembuatan.split('T')[0];
-                editModal.showModal();
+        function editKK(kartuKeluarga) {
+            document.getElementById('editForm').action = `/kartu-keluarga/${kartuKeluarga.id_kk}`;
+            document.getElementById('edit_nomor_kk').value = kartuKeluarga.nomor_kk;
+            document.getElementById('edit_tanggal_pembuatan').value = kartuKeluarga.tanggal_pembuatan.split('T')[0];
+            
+            // Isi field desa jika user adalah admin
+            const desaSelect = document.getElementById('edit_id_desa');
+            if (desaSelect) {
+                desaSelect.value = kartuKeluarga.id_desa;
             }
+            
+            editModal.showModal();
+        }
 
-            function deleteKK(kartuKeluargaId) {
-                document.getElementById('deleteForm').action = `/kartu-keluarga/${kartuKeluargaId}`;
-                deleteModal.showModal();
-            }
+        function deleteKK(kartuKeluargaId) {
+            document.getElementById('deleteForm').action = `/kartu-keluarga/${kartuKeluargaId}`;
+            deleteModal.showModal();
+        }
 
-            // Handle alerts
-            @if (session('success'))
-                const successMessage = "{{ session('success') }}";
-                const alertDiv = document.createElement('div');
-                alertDiv.className =
-                    'fixed top-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded z-50';
-                alertDiv.role = 'alert';
-                alertDiv.innerHTML = `
-                   <div class="flex">
-                       <span class="mr-2">✓</span>
-                       <span>${successMessage}</span>
-                       <span class="ml-4 cursor-pointer" onclick="this.parentElement.parentElement.remove()">×</span>
-                   </div>
-               `;
-                document.body.appendChild(alertDiv);
-                setTimeout(() => alertDiv.remove(), 5000);
-            @endif
+        // Handle alerts
+        @if (session('success'))
+            const successMessage = "{{ session('success') }}";
+            const alertDiv = document.createElement('div');
+            alertDiv.className =
+                'fixed top-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded z-50';
+            alertDiv.role = 'alert';
+            alertDiv.innerHTML = `
+               <div class="flex">
+                   <span class="mr-2">✓</span>
+                   <span>${successMessage}</span>
+                   <span class="ml-4 cursor-pointer" onclick="this.parentElement.parentElement.remove()">×</span>
+               </div>
+           `;
+            document.body.appendChild(alertDiv);
+            setTimeout(() => alertDiv.remove(), 5000);
+        @endif
 
-            @if (session('error'))
-                const errorMessage = "{{ session('error') }}";
-                const errorDiv = document.createElement('div');
-                errorDiv.className = 'fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded z-50';
-                errorDiv.role = 'alert';
-                errorDiv.innerHTML = `
-                   <div class="flex">
-                       <span class="mr-2">⚠</span>
-                       <span>${errorMessage}</span>
-                       <span class="ml-4 cursor-pointer" onclick="this.parentElement.parentElement.remove()">×</span>
-                   </div>
-               `;
-                document.body.appendChild(errorDiv);
-                setTimeout(() => errorDiv.remove(), 5000);
-            @endif
+        @if (session('error'))
+            const errorMessage = "{{ session('error') }}";
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded z-50';
+            errorDiv.role = 'alert';
+            errorDiv.innerHTML = `
+               <div class="flex">
+                   <span class="mr-2">⚠</span>
+                   <span>${errorMessage}</span>
+                   <span class="ml-4 cursor-pointer" onclick="this.parentElement.parentElement.remove()">×</span>
+               </div>
+           `;
+            document.body.appendChild(errorDiv);
+            setTimeout(() => errorDiv.remove(), 5000);
+        @endif
 
-            // Close modal when clicking outside
-            document.querySelectorAll('dialog').forEach(dialog => {
-                dialog.addEventListener('click', (e) => {
-                    const dialogDimensions = dialog.getBoundingClientRect();
-                    if (
-                        e.clientX < dialogDimensions.left ||
-                        e.clientX > dialogDimensions.right ||
-                        e.clientY < dialogDimensions.top ||
-                        e.clientY > dialogDimensions.bottom
-                    ) {
-                        dialog.close();
-                    }
-                });
+        // Close modal when clicking outside
+        document.querySelectorAll('dialog').forEach(dialog => {
+            dialog.addEventListener('click', (e) => {
+                const dialogDimensions = dialog.getBoundingClientRect();
+                if (
+                    e.clientX < dialogDimensions.left ||
+                    e.clientX > dialogDimensions.right ||
+                    e.clientY < dialogDimensions.top ||
+                    e.clientY > dialogDimensions.bottom
+                ) {
+                    dialog.close();
+                }
             });
+        });
 
-            // Prevent modal content clicks from closing the modal
-            document.querySelectorAll('dialog .modal-box').forEach(modalBox => {
-                modalBox.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                });
+        // Prevent modal content clicks from closing the modal
+        document.querySelectorAll('dialog .modal-box').forEach(modalBox => {
+            modalBox.addEventListener('click', (e) => {
+                e.stopPropagation();
             });
-        </script>
-    @endpush
+        });
+    </script>
+@endpush
 @endsection

@@ -23,7 +23,8 @@ class User extends Authenticatable
     protected $fillable = [
         'username',
         'password',
-        'foto'
+        'foto',
+        'id_desa'
     ];
 
     /**
@@ -42,5 +43,10 @@ class User extends Authenticatable
     public function getRouteKeyName(): string
     {
         return 'id_pengguna';
+    }
+
+    public function desa()
+    {
+        return $this->belongsTo(Desa::class, 'id_desa', 'id');
     }
 }

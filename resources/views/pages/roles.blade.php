@@ -46,6 +46,24 @@
             gap: 0.5rem;
         }
 
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 0;
+            top: 100%;
+            padding: 5px 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            font-size: 12px;
+            border-radius: 4px;
+            white-space: nowrap;
+            z-index: 10;
+        }
+
         @media (max-width: 640px) {
             .permissions-grid {
                 grid-template-columns: 1fr;
@@ -76,28 +94,37 @@
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th
-                                        class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Nama Role
                                     </th>
-                                    <th
-                                        class="hidden sm:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th class="hidden sm:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Permissions
                                     </th>
-                                    <th
-                                        class="px-3 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th class="px-3 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Aksi
                                     </th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                @foreach ($roles as $role)
-                                    <tr>
-                                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ $role->name }}</div>
-                                            <!-- Mobile: Show permissions here -->
-                                            <div class="sm:hidden mt-2">
-                                                <div class="flex flex-wrap gap-1">
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    @foreach ($roles as $role)
+                                        <tr>
+                                            <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm font-medium text-gray-900">{{ $role->name }}</div>
+                                                <!-- Mobile: Show permissions here -->
+                                                <div class="sm:hidden mt-2">
+                                                    <div class="flex flex-wrap gap-1">
+                                                        @foreach ($role->permissions as $permission)
+                                                            <span
+                                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-primary-100 text-primary-800">
+                                                                {{ $permission->name }}
+                                                            </span>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="hidden sm:table-cell px-3 sm:px-6 py-4">
+                                                <div class="flex flex-wrap gap-2">
                                                     @foreach ($role->permissions as $permission)
                                                         <span
                                                             class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-primary-100 text-primary-800">
@@ -105,256 +132,269 @@
                                                         </span>
                                                     @endforeach
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td class="hidden sm:table-cell px-3 sm:px-6 py-4">
-                                            <div class="flex flex-wrap gap-2">
-                                                @foreach ($role->permissions as $permission)
-                                                    <span
-                                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-primary-100 text-primary-800">
-                                                        {{ $permission->name }}
-                                                    </span>
-                                                @endforeach
-                                            </div>
-                                        </td>
-                                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            @if ($role->name !== 'Admin')
-                                                <div class="flex items-center justify-end gap-1 sm:gap-2">
-                                                    @can('edit-roles')
-                                                        <button
-                                                            onclick="editRole({
-                                                            id: '{{ $role->id }}',
-                                                            name: '{{ $role->name }}',
-                                                            permissions: {{ $role->permissions->pluck('name') }}
-                                                        })"
-                                                            class="inline-flex items-center p-1 sm:px-3 sm:py-2 bg-primary-50 text-primary-700 hover:bg-primary-100 rounded-lg transition-colors duration-200">
-                                                            <svg class="w-4 h-4 sm:mr-1.5" fill="none" stroke="currentColor"
-                                                                viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                    stroke-width="2"
-                                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                                            </svg>
-                                                            <span class="hidden sm:inline font-medium">Edit</span>
-                                                        </button>
-                                                    @endcan
-
-                                                    @can('delete-roles')
-                                                        <button onclick="deleteRole('{{ $role->id }}')"
-                                                            class="inline-flex items-center p-1 sm:px-3 sm:py-2 bg-red-50 text-red-700 hover:bg-red-100 rounded-lg transition-colors duration-200">
-                                                            <svg class="w-4 h-4 sm:mr-1.5" fill="none" stroke="currentColor"
-                                                                viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                    stroke-width="2"
-                                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                            </svg>
-                                                            <span class="hidden sm:inline font-medium">Hapus</span>
-                                                        </button>
-                                                    @endcan
-                                                </div>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Create Modal -->
-    <dialog id="createModal">
-        <div class="modal-box">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-bold">Tambah Role Baru</h3>
-                <button type="button" onclick="createModal.close()" class="text-gray-400 hover:text-gray-500">
-                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-            <form method="POST" action="{{ route('roles.store') }}">
-                @csrf
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Nama Role</label>
-                        <input type="text" name="name" required
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Permissions</label>
-                        <div class="space-y-4 max-h-[400px] overflow-y-auto pr-2">
-                            <!-- Role Management -->
-                            <div class="group-permissions">
-                                <div class="group-title">Role Management</div>
-                                <div class="permissions-grid">
-                                    @foreach ($permissions->filter(fn($p) => str_contains($p->name, 'roles')) as $permission)
-                                        <div class="flex items-center">
-                                            <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
-                                                id="create_{{ $permission->id }}"
-                                                class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
-                                            <label for="create_{{ $permission->id }}"
-                                                class="ml-2 block text-sm text-gray-900">
-                                                {{ $permission->name }}
-                                            </label>
-                                        </div>
+                                            </td>
+                                            <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                @if ($role->name !== 'Admin')
+                                                    <div class="flex items-center justify-end gap-1 sm:gap-2">
+                                                        @can('edit-roles')
+                                                            <button
+                                                                onclick="editRole({
+                                                                id: '{{ $role->id }}',
+                                                                name: '{{ $role->name }}',
+                                                                permissions: {{ $role->permissions->pluck('name') }}
+                                                            })"
+                                                                class="inline-flex items-center p-1 sm:px-3 sm:py-2 bg-primary-50 text-primary-700 hover:bg-primary-100 rounded-lg transition-colors duration-200">
+                                                                <svg class="w-4 h-4 sm:mr-1.5" fill="none" stroke="currentColor"
+                                                                    viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                                        stroke-width="2"
+                                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                                </svg>
+                                                                <span class="hidden sm:inline font-medium">Edit</span>
+                                                            </button>
+                                                        @endcan
+    
+                                                        @can('delete-roles')
+                                                            <button onclick="deleteRole('{{ $role->id }}')"
+                                                                class="inline-flex items-center p-1 sm:px-3 sm:py-2 bg-red-50 text-red-700 hover:bg-red-100 rounded-lg transition-colors duration-200">
+                                                                <svg class="w-4 h-4 sm:mr-1.5" fill="none" stroke="currentColor"
+                                                                    viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                                        stroke-width="2"
+                                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                                </svg>
+                                                                <span class="hidden sm:inline font-medium">Hapus</span>
+                                                            </button>
+                                                        @endcan
+                                                    </div>
+                                                @endif
+                                            </td>
+                                        </tr>
                                     @endforeach
-                                </div>
-                            </div>
-
-                            <!-- User Management -->
-                            <div class="group-permissions">
-                                <div class="group-title">User Management</div>
-                                <div class="permissions-grid">
-                                    @foreach ($permissions->filter(fn($p) => str_contains($p->name, 'users')) as $permission)
-                                        <div class="flex items-center">
-                                            <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
-                                                id="create_{{ $permission->id }}"
-                                                class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
-                                            <label for="create_{{ $permission->id }}"
-                                                class="ml-2 block text-sm text-gray-900">
-                                                {{ $permission->name }}
-                                            </label>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-
-                            <!-- Penduduk -->
-                            <div class="group-permissions">
-                                <div class="group-title">Data Penduduk</div>
-                                <div class="permissions-grid">
-                                    @foreach ($permissions->filter(fn($p) => str_contains($p->name, 'penduduk')) as $permission)
-                                        <div class="flex items-center">
-                                            <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
-                                                id="create_{{ $permission->id }}"
-                                                class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
-                                            <label for="create_{{ $permission->id }}"
-                                                class="ml-2 block text-sm text-gray-900">
-                                                {{ $permission->name }}
-                                            </label>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-
-                            <!-- Kartu Keluarga -->
-                            <div class="group-permissions">
-                                <div class="group-title">Kartu Keluarga</div>
-                                <div class="permissions-grid">
-                                    @foreach ($permissions->filter(fn($p) => str_contains($p->name, 'kartu-keluarga')) as $permission)
-                                        <div class="flex items-center">
-                                            <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
-                                                id="create_{{ $permission->id }}"
-                                                class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
-                                            <label for="create_{{ $permission->id }}"
-                                                class="ml-2 block text-sm text-gray-900">
-                                                {{ $permission->name }}
-                                            </label>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-
-                            <!-- Identitas Rumah -->
-                            <div class="group-permissions">
-                                <div class="group-title">Identitas Rumah</div>
-                                <div class="permissions-grid">
-                                    @foreach ($permissions->filter(fn($p) => str_contains($p->name, 'identitas-rumah') || str_contains($p->name, 'qr-code')) as $permission)
-                                        <div class="flex items-center">
-                                            <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
-                                                id="create_{{ $permission->id }}"
-                                                class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
-                                            <label for="create_{{ $permission->id }}"
-                                                class="ml-2 block text-sm text-gray-900">
-                                                {{ $permission->name }}
-                                            </label>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-
-                            <!-- Verifikasi -->
-                            <div class="group-permissions">
-                                <div class="group-title">Verifikasi</div>
-                                <div class="permissions-grid">
-                                    @foreach ($permissions->filter(fn($p) => str_contains($p->name, 'verify-documents')) as $permission)
-                                        <div class="flex items-center">
-                                            <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
-                                                id="create_{{ $permission->id }}"
-                                                class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
-                                            <label for="create_{{ $permission->id }}"
-                                                class="ml-2 block text-sm text-gray-900">
-                                                {{ $permission->name }}
-                                            </label>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-
-                            <!-- Laporan -->
-                            <div class="group-permissions">
-                                <div class="group-title">Laporan</div>
-                                <div class="permissions-grid">
-                                    @foreach ($permissions->filter(fn($p) => str_contains($p->name, 'reports')) as $permission)
-                                        <div class="flex items-center">
-                                            <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
-                                                id="create_{{ $permission->id }}"
-                                                class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
-                                            <label for="create_{{ $permission->id }}"
-                                                class="ml-2 block text-sm text-gray-900">
-                                                {{ $permission->name }}
-                                            </label>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                            <!-- QR Scanner -->
-                            <div class="group-permissions">
-                                <div class="group-title">QR Scanner</div>
-                                <div class="permissions-grid">
-                                    @foreach ($permissions->filter(fn($p) => str_contains($p->name, 'scan-qr') || str_contains($p->name, 'export-scan')) as $permission)
-                                        <div class="flex items-center">
-                                            <!-- Untuk Modal Create -->
-                                            <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
-                                                id="create_{{ $permission->id }}"
-                                                class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
-                                            <label for="create_{{ $permission->id }}"
-                                                class="ml-2 block text-sm text-gray-900">
-                                                {{ $permission->name }}
-                                            </label>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-
-                <div class="mt-6 flex justify-end gap-3">
-                    <button type="button" onclick="createModal.close()"
-                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                        Batal
-                    </button>
-                    <button type="submit"
-                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
-                        Simpan
+            </div>
+        </div>
+    
+        <!-- Create Modal -->
+        <dialog id="createModal">
+            <div class="modal-box">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold">Tambah Role Baru</h3>
+                    <button type="button" onclick="createModal.close()" class="text-gray-400 hover:text-gray-500">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
                     </button>
                 </div>
-            </form>
-        </div>
-    </dialog>
-
-    <!-- Edit Modal -->
+                <form id="createForm" method="POST" action="{{ route('roles.store') }}">
+                    @csrf
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Nama Role</label>
+                            <input type="text" name="name" required
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500">
+                        </div>
+    
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Permissions</label>
+                            <div class="mb-4">
+                                <input type="text" 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500" 
+                                    placeholder="Cari permission..."
+                                    onkeyup="filterPermissions(this.value)">
+                            </div>
+                            <div class="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+                                <!-- Manajemen Desa -->
+                                <div class="group-permissions">
+                                    <div class="group-title">Manajemen Desa</div>
+                                    <div class="permissions-grid">
+                                        @foreach ($permissions->filter(fn($p) => str_contains($p->name, 'desa')) as $permission)
+                                            <div class="flex items-center">
+                                                <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
+                                                    id="create_{{ $permission->id }}"
+                                                    class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
+                                                <label for="create_{{ $permission->id }}" class="ml-2 block text-sm text-gray-900 tooltip" 
+                                                    data-tooltip="{{ $permission->name }}">
+                                                    {{ $permission->name }}
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+    
+                                <!-- Role Management -->
+                                <div class="group-permissions">
+                                    <div class="group-title">Role Management</div>
+                                    <div class="permissions-grid">
+                                        <div class="permissions-grid">
+                                            @foreach ($permissions->filter(fn($p) => str_contains($p->name, 'roles')) as $permission)
+                                                <div class="flex items-center">
+                                                    <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
+                                                        id="create_{{ $permission->id }}"
+                                                        class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
+                                                    <label for="create_{{ $permission->id }}" class="ml-2 block text-sm text-gray-900 tooltip"
+                                                        data-tooltip="{{ $permission->name }}">
+                                                        {{ $permission->name }}
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+        
+                                    <!-- User Management -->
+                                    <div class="group-permissions">
+                                        <div class="group-title">User Management</div>
+                                        <div class="permissions-grid">
+                                            @foreach ($permissions->filter(fn($p) => str_contains($p->name, 'users')) as $permission)
+                                                <div class="flex items-center">
+                                                    <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
+                                                        id="create_{{ $permission->id }}"
+                                                        class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
+                                                    <label for="create_{{ $permission->id }}" class="ml-2 block text-sm text-gray-900 tooltip"
+                                                        data-tooltip="{{ $permission->name }}">
+                                                        {{ $permission->name }}
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+        
+                                    <!-- Penduduk -->
+                                    <div class="group-permissions">
+                                        <div class="group-title">Data Penduduk</div>
+                                        <div class="permissions-grid">
+                                            @foreach ($permissions->filter(fn($p) => str_contains($p->name, 'penduduk')) as $permission)
+                                                <div class="flex items-center">
+                                                    <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
+                                                        id="create_{{ $permission->id }}"
+                                                        class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
+                                                    <label for="create_{{ $permission->id }}" class="ml-2 block text-sm text-gray-900 tooltip"
+                                                        data-tooltip="{{ $permission->name }}">
+                                                        {{ $permission->name }}
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+        
+                                    <!-- Kartu Keluarga -->
+                                    <div class="group-permissions">
+                                        <div class="group-title">Kartu Keluarga</div>
+                                        <div class="permissions-grid">
+                                            @foreach ($permissions->filter(fn($p) => str_contains($p->name, 'kartu-keluarga')) as $permission)
+                                                <div class="flex items-center">
+                                                    <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
+                                                        id="create_{{ $permission->id }}"
+                                                        class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
+                                                    <label for="create_{{ $permission->id }}" class="ml-2 block text-sm text-gray-900 tooltip"
+                                                        data-tooltip="{{ $permission->name }}">
+                                                        {{ $permission->name }}
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+        
+                                    <!-- Identitas Rumah -->
+                                    <div class="group-permissions">
+                                        <div class="group-title">Identitas Rumah</div>
+                                        <div class="permissions-grid">
+                                            @foreach ($permissions->filter(fn($p) => str_contains($p->name, 'identitas-rumah') || str_contains($p->name, 'qr-code')) as $permission)
+                                                <div class="flex items-center">
+                                                    <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
+                                                        id="create_{{ $permission->id }}"
+                                                        class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
+                                                    <label for="create_{{ $permission->id }}" class="ml-2 block text-sm text-gray-900 tooltip"
+                                                        data-tooltip="{{ $permission->name }}">
+                                                        {{ $permission->name }}
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+        
+                                    <!-- Verifikasi -->
+                                    <div class="group-permissions">
+                                        <div class="group-title">Verifikasi</div>
+                                        <div class="permissions-grid">
+                                            @foreach ($permissions->filter(fn($p) => str_contains($p->name, 'verify-documents')) as $permission)
+                                                <div class="flex items-center">
+                                                    <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
+                                                        id="create_{{ $permission->id }}"
+                                                        class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
+                                                    <label for="create_{{ $permission->id }}" class="ml-2 block text-sm text-gray-900 tooltip"
+                                                        data-tooltip="{{ $permission->name }}">
+                                                        {{ $permission->name }}
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+        
+                                    <!-- Laporan -->
+                                    <div class="group-permissions">
+                                        <div class="group-title">Laporan</div>
+                                        <div class="permissions-grid">
+                                            @foreach ($permissions->filter(fn($p) => str_contains($p->name, 'reports')) as $permission)
+                                                <div class="flex items-center">
+                                                    <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
+                                                        id="create_{{ $permission->id }}"
+                                                        class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
+                                                    <label for="create_{{ $permission->id }}" class="ml-2 block text-sm text-gray-900 tooltip"
+                                                        data-tooltip="{{ $permission->name }}">
+                                                        {{ $permission->name }}
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+        
+                                    <!-- QR Scanner -->
+                                    <div class="group-permissions">
+                                        <div class="group-title">QR Scanner</div>
+                                        <div class="permissions-grid">
+                                            @foreach ($permissions->filter(fn($p) => str_contains($p->name, 'scan-qr') || str_contains($p->name, 'export-scan')) as $permission)
+                                                <div class="flex items-center">
+                                                    <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
+                                                        id="create_{{ $permission->id }}"
+                                                        class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
+                                                    <label for="create_{{ $permission->id }}" class="ml-2 block text-sm text-gray-900 tooltip"
+                                                        data-tooltip="{{ $permission->name }}">
+                                                        {{ $permission->name }}
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <div class="mt-6 flex justify-end gap-3">
+                            <button type="button" onclick="createModal.close()"
+                                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                                Batal
+                            </button>
+                            <button type="submit"
+                                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                Simpan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </dialog>
+            <!-- Edit Modal -->
     <dialog id="editModal">
         <div class="modal-box">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-bold">Edit Role</h3>
                 <button type="button" onclick="editModal.close()" class="text-gray-400 hover:text-gray-500">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokelinecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
@@ -370,7 +410,31 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Permissions</label>
+                        <div class="mb-4">
+                            <input type="text" 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500" 
+                                placeholder="Cari permission..."
+                                onkeyup="filterPermissions(this.value)">
+                        </div>
                         <div class="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+                            <!-- Manajemen Desa -->
+                            <div class="group-permissions">
+                                <div class="group-title">Manajemen Desa</div>
+                                <div class="permissions-grid">
+                                    @foreach ($permissions->filter(fn($p) => str_contains($p->name, 'desa')) as $permission)
+                                        <div class="flex items-center">
+                                            <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
+                                                id="edit_{{ $permission->id }}"
+                                                class="permission-checkbox h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
+                                            <label for="edit_{{ $permission->id }}" class="ml-2 block text-sm text-gray-900 tooltip"
+                                                data-tooltip="{{ $permission->name }}">
+                                                {{ $permission->name }}
+                                            </label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
                             <!-- Role Management -->
                             <div class="group-permissions">
                                 <div class="group-title">Role Management</div>
@@ -380,8 +444,8 @@
                                             <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
                                                 id="edit_{{ $permission->id }}"
                                                 class="permission-checkbox h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
-                                            <label for="edit_{{ $permission->id }}"
-                                                class="ml-2 block text-sm text-gray-900">
+                                            <label for="edit_{{ $permission->id }}" class="ml-2 block text-sm text-gray-900 tooltip"
+                                                data-tooltip="{{ $permission->name }}">
                                                 {{ $permission->name }}
                                             </label>
                                         </div>
@@ -398,8 +462,8 @@
                                             <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
                                                 id="edit_{{ $permission->id }}"
                                                 class="permission-checkbox h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
-                                            <label for="edit_{{ $permission->id }}"
-                                                class="ml-2 block text-sm text-gray-900">
+                                            <label for="edit_{{ $permission->id }}" class="ml-2 block text-sm text-gray-900 tooltip"
+                                                data-tooltip="{{ $permission->name }}">
                                                 {{ $permission->name }}
                                             </label>
                                         </div>
@@ -416,8 +480,8 @@
                                             <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
                                                 id="edit_{{ $permission->id }}"
                                                 class="permission-checkbox h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
-                                            <label for="edit_{{ $permission->id }}"
-                                                class="ml-2 block text-sm text-gray-900">
+                                            <label for="edit_{{ $permission->id }}" class="ml-2 block text-sm text-gray-900 tooltip"
+                                                data-tooltip="{{ $permission->name }}">
                                                 {{ $permission->name }}
                                             </label>
                                         </div>
@@ -434,8 +498,8 @@
                                             <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
                                                 id="edit_{{ $permission->id }}"
                                                 class="permission-checkbox h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
-                                            <label for="edit_{{ $permission->id }}"
-                                                class="ml-2 block text-sm text-gray-900">
+                                            <label for="edit_{{ $permission->id }}" class="ml-2 block text-sm text-gray-900 tooltip"
+                                                data-tooltip="{{ $permission->name }}">
                                                 {{ $permission->name }}
                                             </label>
                                         </div>
@@ -452,8 +516,8 @@
                                             <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
                                                 id="edit_{{ $permission->id }}"
                                                 class="permission-checkbox h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
-                                            <label for="edit_{{ $permission->id }}"
-                                                class="ml-2 block text-sm text-gray-900">
+                                            <label for="edit_{{ $permission->id }}" class="ml-2 block text-sm text-gray-900 tooltip"
+                                                data-tooltip="{{ $permission->name }}">
                                                 {{ $permission->name }}
                                             </label>
                                         </div>
@@ -470,8 +534,8 @@
                                             <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
                                                 id="edit_{{ $permission->id }}"
                                                 class="permission-checkbox h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
-                                            <label for="edit_{{ $permission->id }}"
-                                                class="ml-2 block text-sm text-gray-900">
+                                            <label for="edit_{{ $permission->id }}" class="ml-2 block text-sm text-gray-900 tooltip"
+                                                data-tooltip="{{ $permission->name }}">
                                                 {{ $permission->name }}
                                             </label>
                                         </div>
@@ -488,15 +552,16 @@
                                             <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
                                                 id="edit_{{ $permission->id }}"
                                                 class="permission-checkbox h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
-                                            <label for="edit_{{ $permission->id }}"
-                                                class="ml-2 block text-sm text-gray-900">
+                                            <label for="edit_{{ $permission->id }}" class="ml-2 block text-sm text-gray-900 tooltip"
+                                                data-tooltip="{{ $permission->name }}">
                                                 {{ $permission->name }}
                                             </label>
                                         </div>
                                     @endforeach
                                 </div>
                             </div>
-                            <!-- Scan QR -->
+
+                            <!-- QR Scanner -->
                             <div class="group-permissions">
                                 <div class="group-title">QR Scanner</div>
                                 <div class="permissions-grid">
@@ -505,8 +570,8 @@
                                             <input type="checkbox" name="permissions[]" value="{{ $permission->name }}"
                                                 id="edit_{{ $permission->id }}"
                                                 class="permission-checkbox h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
-                                            <label for="edit_{{ $permission->id }}"
-                                                class="ml-2 block text-sm text-gray-900">
+                                            <label for="edit_{{ $permission->id }}" class="ml-2 block text-sm text-gray-900 tooltip"
+                                                data-tooltip="{{ $permission->name }}">
                                                 {{ $permission->name }}
                                             </label>
                                         </div>
@@ -542,8 +607,7 @@
                     </svg>
                 </button>
             </div>
-            <p class="text-gray-600 mb-4">Apakah Anda yakin ingin menghapus role ini? Tindakan ini tidak dapat dibatalkan.
-            </p>
+            <p class="text-gray-600 mb-4">Apakah Anda yakin ingin menghapus role ini? Tindakan ini tidak dapat dibatalkan.</p>
             <form id="deleteForm" method="POST">
                 @csrf
                 @method('DELETE')
@@ -563,6 +627,48 @@
 
     @push('scripts')
         <script>
+            function validatePermissions(form) {
+                const checkboxes = form.querySelectorAll('input[name="permissions[]"]:checked');
+                if (checkboxes.length === 0) {
+                    alert('Pilih setidaknya satu permission');
+                    return false;
+                }
+                return true;
+            }
+
+            function filterPermissions(query) {
+                query = query.toLowerCase();
+                document.querySelectorAll('.group-permissions').forEach(group => {
+                    let hasVisible = false;
+                    group.querySelectorAll('.flex.items-center').forEach(item => {
+                        const text = item.querySelector('label').textContent.toLowerCase();
+                        if (text.includes(query)) {
+                            item.style.display = '';
+                            hasVisible = true;
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                   // Hide group if no visible permissions
+                   group.style.display = hasVisible ? '' : 'none';
+                });
+            }
+
+            function handleSubmit(form, button) {
+                if (validatePermissions(form)) {
+                    button.innerHTML = `
+                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Memproses...
+                    `;
+                    button.disabled = true;
+                    return true;
+                }
+                return false;
+            }
+
             function editRole(roleData) {
                 document.getElementById('editForm').action = `/roles/${roleData.id}`;
                 document.getElementById('edit_name').value = roleData.name;
@@ -587,6 +693,14 @@
                 deleteModal.showModal();
             }
 
+            // Add form submission handlers
+            document.querySelectorAll('form').forEach(form => {
+                const submitButton = form.querySelector('button[type="submit"]');
+                if (submitButton) {
+                    form.onsubmit = () => handleSubmit(form, submitButton);
+                }
+            });
+
             // Handle alerts
             @if (session('success'))
                 const successMessage = "{{ session('success') }}";
@@ -595,12 +709,12 @@
                     'fixed top-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded z-50';
                 alertDiv.role = 'alert';
                 alertDiv.innerHTML = `
-    <div class="flex">
-        <span class="mr-2">✓</span>
-        <span>${successMessage}</span>
-        <span class="ml-4 cursor-pointer" onclick="this.parentElement.parentElement.remove()">×</span>
-    </div>
-`;
+                    <div class="flex">
+                        <span class="mr-2">✓</span>
+                        <span>${successMessage}</span>
+                        <span class="ml-4 cursor-pointer" onclick="this.parentElement.parentElement.remove()">×</span>
+                    </div>
+                `;
                 document.body.appendChild(alertDiv);
                 setTimeout(() => alertDiv.remove(), 5000);
             @endif
@@ -611,12 +725,12 @@
                 errorDiv.className = 'fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded z-50';
                 errorDiv.role = 'alert';
                 errorDiv.innerHTML = `
-    <div class="flex">
-        <span class="mr-2">⚠</span>
-        <span>${errorMessage}</span>
-        <span class="ml-4 cursor-pointer" onclick="this.parentElement.parentElement.remove()">×</span>
-    </div>
-`;
+                    <div class="flex">
+                        <span class="mr-2">⚠</span>
+                        <span>${errorMessage}</span>
+                        <span class="ml-4 cursor-pointer" onclick="this.parentElement.parentElement.remove()">×</span>
+                    </div>
+                `;
                 document.body.appendChild(errorDiv);
                 setTimeout(() => errorDiv.remove(), 5000);
             @endif
@@ -644,5 +758,4 @@
             });
         </script>
     @endpush
-
 @endsection

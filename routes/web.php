@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DesaController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
@@ -100,5 +101,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/profile', 'edit')->name('profile.edit');
         Route::patch('/profile', 'update')->name('profile.update');
         Route::patch('/profile/password', 'updatePassword')->name('profile.update-password');
+    });
+
+    // Desa Management Routes
+    Route::controller(DesaController::class)->group(function () {
+        Route::get('desa', 'index')->name('desa.index');
+        Route::post('desa', 'store')->name('desa.store');
+        Route::put('desa/{desa}', 'update')->name('desa.update');
+        Route::delete('desa/{desa}', 'destroy')->name('desa.destroy');
     });
 });
